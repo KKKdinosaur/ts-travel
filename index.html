@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3.0">
+    <title>도야 & 삿포로</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            position: relative;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .navigation-tabs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+        }
+        
+        .nav-tab {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9em;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 45px;
+        }
+        
+        .nav-tab:hover, .nav-tab:active {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #0984e3, #74b9ff);
+        }
+        
+        .content {
+            padding: 20px 15px;
+        }
+        
+        .itinerary-overview {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px 20px;
+            margin: 15px 0;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .itinerary-overview h2 {
+            color: #e17055;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .day-schedule {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .day-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 15px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #74b9ff;
+            transition: all 0.3s ease;
+        }
+        
+        .day-card:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .day-card h3 {
+            color: #2d3436;
+            font-size: 1.3em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .day-card .location {
+            background: #74b9ff;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .day-card p {
+            font-size: 0.95em;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+        
+        .info-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-section h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+        
+        .info-section a {
+            color: #2d3436;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 2px 6px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+        
+        .info-section a:hover, .info-section a:active {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.02);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .map-container {
+            margin: 25px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            height: 350px;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+            touch-action: pan-x pan-y;
+        }
+        
+        .category {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 15px;
+            padding: 20px 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        .category h2 {
+            color: #ff6b6b;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #feca57;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .restaurant, .tourist-spot, .activity-item, .tourist-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-bottom: 20px;
+            padding: 18px 15px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left: 3px solid #20bf6b;
+        }
+        
+        .restaurant h3, .tourist-spot h3, .activity-item h4, .tourist-item h4 {
+            color: #2c3e50;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.3;
+        }
+        
+        .restaurant h3 a, .tourist-spot h3 a {
+            color: #2c3e50;
+            text-decoration: none;
+            word-break: break-all;
+            font-size: 1em;
+        }
+        
+        .restaurant h3 a:hover, .tourist-spot h3 a:hover,
+        .restaurant h3 a:active, .tourist-spot h3 a:active {
+            color: #ff6b6b;
+        }
+        
+        .restaurant h3 a::after, .tourist-spot h3 a::after {
+            content: '🔗';
+            margin-left: 5px;
+            opacity: 0.7;
+            font-size: 0.8em;
+        }
+        
+        .restaurant-details, .spot-details {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: white;
+            background: #feca57;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            text-align: center;
+            align-self: flex-start;
+            white-space: nowrap;
+        }
+        
+        .detail-value {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .activity-section, .tourist-section {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 20px 15px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+        }
+        
+        .tourist-section {
+            background: linear-gradient(135deg, #fd79a8 0%, #ff7675 100%);
+            box-shadow: 0 8px 20px rgba(255, 118, 117, 0.3);
+        }
+        
+        .activity-section h2, .tourist-section h2 {
+            color: white;
+            border-bottom-color: #feca57;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+        
+        .activity-section .activity-item, .tourist-section .tourist-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-left: 3px solid #feca57;
+            margin-bottom: 15px;
+        }
+        
+        .activity-section .activity-item:active, .tourist-section .tourist-item:active {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(5px);
+        }
+        
+        .activity-section .activity-item h4, .tourist-section .tourist-item h4 {
+            color: #feca57;
+            font-size: 1.1em;
+        }
+        
+        .activity-section .activity-item p, .tourist-section .tourist-item p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.9em;
+        }
+        
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 5px;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #ff7675, #fd79a8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .leaflet-popup-content {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .leaflet-popup-content a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .leaflet-popup-content a:hover, .leaflet-popup-content a:active {
+            text-decoration: underline;
+        }
+        
+        .leaflet-container {
+            font-size: 14px;
+        }
+        
+        .leaflet-control-zoom {
+            font-size: 18px;
+        }
+        
+        .leaflet-control-zoom a {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+        }
+        
+		.access-details {
+    margin: 15px 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.access-summary {
+    background: rgba(116, 185, 255, 0.8);
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9em;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+}
+
+.access-summary:hover {
+    background: rgba(116, 185, 255, 1);
+}
+
+.access-summary::after {
+    content: '▼';
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+}
+
+.access-details[open] .access-summary::after {
+    transform: rotate(180deg);
+}
+
+.access-content {
+    padding: 15px;
+    background: white;
+    color: #000 !important; /* !important 추가 */
+}
+
+.access-content p {
+    margin-bottom: 8px;
+    font-size: 0.85em;
+    line-height: 1.4;
+    color: #000 !important; /* !important 추가 */
+}
+
+.access-content strong {
+    color: #000 !important; /* strong 태그도 명시적으로 지정 */
+}
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+		
+        /* 터치 최적화 */
+        .nav-tab, .day-card, .restaurant, .tourist-spot, .activity-item, .tourist-item {
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+        }
+        
+        /* 스크롤바 스타일링 (Webkit 기반 브라우저) */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+        
+        /* 더 큰 폰트 크기를 위한 미디어 쿼리 */
+        @media (max-width: 480px) {
+            body {
+                font-size: 15px;
+                padding: 5px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .navigation-tabs {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 12px;
+            }
+            
+            .nav-tab {
+                font-size: 0.9em;
+                padding: 12px;
+            }
+            
+            .category h2 {
+                font-size: 1.4em;
+            }
+            
+            .restaurant h3, .tourist-spot h3, .activity-item h4, .tourist-item h4 {
+                font-size: 1.1em;
+            }
+            
+            .map-container {
+                height: 300px;
+            }
+        }
+        
+        /* 접근성 개선 */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* 다크모드 지원 */
+        @media (prefers-color-scheme: dark) {
+            .leaflet-popup-content {
+                background: #333 !important;
+                color: #fff !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌊 도야 & 🗻삿포로</h1>
+        </div>
+        
+        <div class="navigation-tabs">
+            <a href="#overview" class="nav-tab">🗓️ 일정 개요</a>
+            <a href="#toya" class="nav-tab">🌊 도야</a>
+            <a href="#sapporo" class="nav-tab">🗻 삿포로</a>
+            <a href="#map" class="nav-tab">🗺️ 지도</a>
+        </div>
+        
+        <div class="itinerary-overview" id="overview">
+            <h2>📅 여행 일정 개요</h2>
+            <div class="day-schedule">
+                <div class="day-card">
+                    <h3>🛫 1일차</h3>
+                    <div class="location">인천공항 → 신치토세 → 노보리베츠 → 도야</div>
+                    <p><strong>10:05:</strong> 인천공항 출발 → 12:50 신치토세 공항 도착</p> <br/>
+                    <p><strong>13:30:</strong> 노보리베츠 이동 (이동시간 약 1시간)</p><br/>
+                    <p><strong>관광:</strong> 노보리베츠 지옥계곡 - 황화산 분화구의 용암계곡 탐방</p><br/>
+                    <p><strong>이동:</strong> 도야 호수로 이동 (약 1시간)</p><br/>
+                    <p><strong>18:00:</strong> 석식후 호텔 투숙 (지유시간)</p><br/>
+                </div>
+                
+                <div class="day-card">
+                    <h3>🌄 2일차</h3>
+                    <div class="location">도야 → 삿포로</div><br/>
+                    <p><strong>오전:</strong> 도야호 유람선 관광/ 쇼와신잔 화산& 우스산 로프웨이 체험</p><br/>
+                    <p><strong>중식:</strong> 후 삿포로 이동 (이동시간 약 2시간)</p><br/>
+                    <p><strong>오후:</strong> 삿포로 관광 - 삿포로 맥주박물관 관람 및 생맥주 시음, 오도리 공원 산책</p><br/>
+                    <p><strong>석식:</strong> 후 호텔 투숙 및 온천욕 휴식 (자유시간)</p><br/>
+                </div>
+                
+                <div class="day-card">
+                    <h3>🏙️ 3일차</h3>
+                    <div class="location">삿포로 → 오타루 → 삿포로</div><br/>
+                    <p><strong>오전:</strong> 오타루 이동 (이동시간 약 1시간) 관광 - 오타루 운하, 기타이치 유리공예 거리, 오르골 전시관</p><br/>
+                    <p><strong>오후:</strong> 중식 후 삿포로 복귀 - 삿포로 시내 북해도 신궁, 면세점쇼핑, 시내 자유시간</p><br/>
+                    <p><strong>석식:</strong> 후 호텔 투숙 (자유시간)</p><br/>
+                </div>
+                
+                <div class="day-card">
+                    <h3>🛫 4일차</h3><br/>
+                    <div class="location">삿포로 → 신치토세 → 인천공항</div><br/>
+                    <p><strong>07:00-10:00:</strong> 호텔 조식 후 체크아웃</p><br/>
+                    <p><strong>10:30-14:05:</strong> 신치토세 국제공항 이동 후 비행기 탑승 → 17:05 인천 국제공항 도착</p><br/>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content" id="toya">
+            <div class="info-section">
+                <h3>🏨 숙소 & 위치 정보</h3>
+                <div class="info-grid">
+                    <div><span class="highlight">숙소</span> <a href="https://www.toyamanseikaku.jp/ko/" target="_blank">도야코 만세이카쿠 호텔 레이크사이드 (1박)</a></div>
+                    <div><span class="highlight">지역</span> 도야 호반 온천가 (시코츠 도야 국립공원 내)</div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2><span class="emoji">🎁</span>저녁 도야 지역 특산품 & 명물</h2>
+                
+                <div class="restaurant">
+                    <h3><a href="https://www.wakasaimo.com/ko/shop/toyakohonten/" target="_blank">와카사이모 (若狹芋)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">대표상품</span>
+                            <span class="detail-value">도야코 지역의 유명한 간식. 고구마 맛을 재현한 디저트로, 맛과 포장 모두 관광객들에게 인기</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">제품명</span>
+                            <span class="detail-value">와카사이모, 이모텐(튀김 와카사이모), 자가키 소프트</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">대표적인 지역 과자 이름엔 '이모(고구마)'가 들어가지만 실제로 고구마를 사용하지 않고, 흰 팥 앙금 등이 들어간 부드러운 과자</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">추천</span>
+                            <span class="detail-value">도야호 대표 명과, 본점에서만 맛볼 수 있는 갓 튀긴 이모텐 필수</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://www.tsunagujapan.com/ko/japan-only-kit-kat-flavor-guide-from-regional-to-limited/" target="_blank">홋카이도 한정 키트캣 & 과자류</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">대표상품</span>
+                            <span class="detail-value">홋카이도 멜론맛 키트캣, 시로이 코이비토, 로이스 초콜릿</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">제품명</span>
+                            <span class="detail-value">유바리 멜론 키트캣, 말차맛, 사케맛, 루타오 치즈케이크</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">홋카이도에서만 판매하는 지역 한정품, 300종 이상 키트캣 맛 개발</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">추천</span>
+                            <span class="detail-value">일본 여행 필수 기념품, 홋카이도 특산물 활용한 독특한 맛</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://toyako-bokutou.com/" target="_blank">도야호 에치고야 (洞爺湖越後屋)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">대표상품</span>
+                            <span class="detail-value">도야호 목검(洞爺湖木刀), 에치고야 만주, 아니메 '은혼' 공식 굿즈</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">제품명</span>
+                            <span class="detail-value">도야호 목검, 에치고야 만주, 토트백</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">30년 이상 숙련 장인의 수제 목검 조각, "수상하고 재미있는 기념품가게"</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">추천</span>
+                            <span class="detail-value">도야호만의 독특한 기념품, 풍당 풍미의 에치고야 만주</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://j-picks.com/kr/33/" target="_blank">도야호 온천 관련 특산품</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">대표상품</span>
+                            <span class="detail-value">바스클린 일본명탕 시리즈, 바스로마 온천 입욕제, BARTH 탄산입욕제</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">제품명</span>
+                            <span class="detail-value">도야 온천 입욕제, 온천 수건, 온천 타올, 족욕제</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">집에서 도야 온천 재현, 피로회복과 혈액순환 촉진 효과</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">추천</span>
+                            <span class="detail-value">일본 온천문화 체험 가능한 실용적 선물</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-section">
+                <h2><span class="emoji">🎆</span>도야 야간 액티비티</h2>
+                
+                <div class="activity-item">
+                    <h4>🎇 도야코 롱런 불꽃축제</h4>
+                    <p><strong>일본 최장 불꽃축제</strong>: 4월 하순~10월 말까지 매일 밤 20:45~21:05 (20분간)</p>
+                    <p><strong>호수 위 불꽃</strong>: 유람선에서 발사하는 450발의 불꽃이 도야호 밤하늘과 호수면에 반사</p>
+                    <p><strong>최고 관람지</strong>: 호텔 객실, 호반 산책로, 온천거리 어디서든 완벽한 뷰</p>
+                    <p><strong>특별함</strong>: 세계에서 가장 긴 기간 운영되는 불꽃축제로 기네스북 등재</p>
+                </div>
+                
+                <div class="activity-item">
+                    <h4>♨️ 야간 온천 투어</h4>
+                    <p><strong>호텔 온천</strong>: 도야호를 바라보며 즐기는 노천온천, 별빛 아래 힐링 타임</p>
+                    <p><strong>족욕 순례</strong>: 온천거리 곳곳의 무료 족욕장에서 야경 감상</p>
+                    <p><strong>수탕 체험</strong>: 도야코 온천 도로탕 등 무료 수탕에서 손과 발 온천욕</p>
+                </div>
+                
+                <div class="activity-item">
+                    <h4>🌃 야경 감상 포인트</h4>
+                    <p><strong>호반 산책로</strong>: 밤에도 안전한 조명이 설치된 호수 둘레 산책로</p>
+                    <p><strong>조각공원 야간</strong>: 조명이 켜진 58개 조각 작품들의 환상적인 야간 풍경</p>
+                    <p><strong>온천거리</strong>: 네온사인과 호텔 불빛이 호수면에 반사되는 낭만적 야경</p>
+                    <p><strong>호텔 라운지</strong>: 각 호텔 라운지에서 실내 난방과 함께 야경 감상</p>
+                </div>
+                
+                <div class="activity-item">
+                    <h4>🎮 실내 엔터테인먼트</h4>
+                    <p><strong>호텔 가라오케</strong>: 만세이카쿠 호텔 내 가라오케룸에서 일본 노래방 체험</p>
+                    <p><strong>온천 휴게실</strong>: 온천 후 휴식공간에서 마사지와 음료 서비스</p>
+                    <p><strong>쇼핑 타임</strong>: 온천거리 기념품상점에서 홋카이도 특산품 쇼핑</p>
+                    <p><strong>호텔 바</strong>: 도야호 야경을 바라보며 즐기는 칵테일과 현지 사케</p>
+                </div>
+            </div>
+            
+            <div class="activity-section">
+                <h2><span class="emoji">🛍️</span>저녁 쇼핑 & 기념품</h2>
+                
+                <div class="activity-item">
+                    <h4>🏪 도야코 온천가 기념품 거리</h4>
+                    <p><strong>운영시간</strong>: 오후 6시~밤 10시까지 (대부분 상점)</p>
+                    <p><strong>위치</strong>: 만세이카쿠 호텔에서 도보 2-3분 거리</p>
+                    <p><strong>추천상품</strong>: 와카사이모 + 이모텐 세트, 홋카이도 한정 키트캣, 도야코 온천 입욕제</p>
+                    <p><strong>특별함</strong>: 저녁 시간대 한산해서 여유롭게 쇼핑, 불꽃축제 전후 들르기 완벽</p>
+                </div>
+
+                <div class="activity-item">
+                    <h4>🎁 기념품 패키지</h4>
+                    <p><strong>와카사이모 본점</strong>: 갓 튀긴 이모텐 + 포장용 와카사이모</p>
+                    <p><strong>홋카이도 과자 세트</strong>: 키트캣 멜론맛 + 로이스 초콜릿 + 자가키 쿠키</p>
+                    <p><strong>현지 술</strong>: 홋카이도 사케 미니병 + 도야코 맥주</p>
+                </div>
+            </div>
+        </div>
+        
+		
+		
+        <div class="content" id="sapporo">
+            <div class="info-section">
+                <h3>🏨 숙소 & 위치 정보</h3>
+                <div class="info-grid">
+                    <div><span class="highlight">숙소</span> <a href="https://www.hotelmonterey.co.jp/kr/edelhof/" target="_blank">몬테레이 에델호프 삿포로 (2박)</a></div>
+                    <div><span class="highlight">지역</span> 삿포로 시내 중심가 (스스키노 일대)</div>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+
+            <div class="tourist-section">
+                <h2><span class="emoji">🏛️</span>숙소 근처 인기 관광지</h2>
+               
+                
+                <div class="tourist-item">
+    <h4>🌃 모이와산 야경</h4>
+    <p><strong>삿포로 3대 야경명소</strong>: 해발 531m에서 내려다보는 삿포로 시내 전경, 일본 신3대 야경 중 하나</p>
+    <p><strong>로프웨이 운행</strong>: 중복삭도(케이블카) + 모이와스카이 리프트 2단계 이용, 약 10분 소요</p>
+    <p><strong>최적 관람시간</strong>: 일몰 30분 후~밤 10시, 겨울철 특히 아름다운 설경과 조명</p>
+    <p><strong>접근성</strong>: 시덴(노면전차) 로프웨이입구역에서 도보 8분 후 케이블카 탑승</p>
+    <p><strong>주소</strong>: 〒064-0942 Hokkaido, Sapporo, Chuo Ward, Fushimi, 5 Chome-3-7</p>
+
+		<details class="access-details">
+        <summary class="access-summary">🚇 숙소에서 접근 방법 보기</summary>
+        <div class="access-content">
+            <p><strong>총 소요시간</strong>: 약 40-50분 | <strong>비용</strong>: 편도 약 1,400엔</p>
+            <p><strong>1단계</strong>: 숙소 → 스스키노/니시4초메 정류장 (도보 5-10분)</p>
+            <p><strong>2단계</strong>: 시덴 2호선 → 로프웨이이리구치역 (15-20분, 210엔)</p>
+            <p><strong>3단계</strong>: 정류장 → 케이블카 산록역 (도보 8분)</p>
+            <p><strong>4단계</strong>: 모이와 로프웨이 + 스카이리프트 2단계 (총 7분)</p>
+            <p><strong>운행시간</strong>: 10:30-22:00 (동절기 11:00-22:00)</p>
+        </div>
+    </details>
+
+</div>
+
+
+
+
+
+
+
+
+                
+                <div class="tourist-item">
+                    <h4>🍫 시로이코이비토파크</h4>
+                    <p><strong>초콜릿 테마파크</strong>: 시로이코이비토 브랜드의 공장견학 및 체험시설</p>
+                    <p><strong>주요 시설</strong>: 초콜릿 제조공정 견학, 카페, 기념품샵, 계절별 정원(장미정원 유명)</p>
+                    <p><strong>체험 프로그램</strong>: 오리지널 시로이코이비토 만들기, 초콜릿 데코레이션 체험</p>
+                    <p><strong>운영시간</strong>: 10:00-18:00 (입장 17:00까지), 연중무휴</p>
+                    <p><strong>접근성</strong>: JR 삿포로역에서 지하철 동서선 미야노사와역 하차 도보 7분</p>
+                    <p><strong>주소</strong>: 〒063-0052 Hokkaido, Sapporo, Nishi Ward, Miyanosawa, 2 Jo, 2-11-36</p>
+                </div>
+
+
+                <div class="tourist-item">
+                    <h4>🌸 오도리공원</h4>
+                    <p><strong>삿포로의 상징적 공원</strong>: 동서로 1.5km 뻗은 삿포로 중심부의 오아시스, 92종 4,700그루 나무로 둘러싸임</p>
+                    <p><strong>계절별 축제</strong>: 겨울 눈축제, 봄 라일락축제, 여름 비어가든 &YOSAKOI축제, 가을 오텀페스트</p>
+                    <p><strong>접근성</strong>: 지하철 오도리역에서 도보 3분, 숙소에서 도보 10분</p>
+                    <p><strong>주소</strong>: 〒060-0042 Hokkaido, Sapporo, Chuo Ward, Odorinishi, 1-12 Chome</p>
+                </div>
+                
+                <div class="tourist-item">
+                    <h4>🕐 삿포로 시계탑</h4>
+                    <p><strong>역사적 건물</strong>: 1878년 건립된 구 삿포로 농학교 무술도장, 홋카이도 대학의 전신</p>
+                    <p><strong>체험</strong>: 1층 시계탑 역사, 2층 무술도장 분위기 체험 및 시계 기계 견학 가능</p>
+                    <p><strong>접근성</strong>: 오도리역에서 도보 10분, 야간 일루미네이션 포토존으로 인기</p>
+                    <p><strong>주소</strong>: 〒060-0001 Hokkaido, Sapporo, Chuo Ward, Kita 1 Jonishi, 2 Chome</p>
+                </div>
+                
+                <div class="tourist-item">
+                    <h4>🦀 니조시장</h4>
+                    <p><strong>전통 시장</strong>: 메이지 초기부터 125년 역사, 홋카이도 해산물의 메카</p>
+                    <p><strong>먹거리</strong>: 신선한 카이센동, 킹크랩, 성게, 가리비 등 홋카이도 특산 해산물</p>
+                    <p><strong>접근성</strong>: 오도리역에서 도보 7분, 소세이가와 연변의 아름다운 위치</p>
+                    <p><strong>주소</strong>: 〒060-0033 Hokkaido, Sapporo, Chuo Ward, Minami 3 Jonishi, 1-8 Chome</p>
+                </div>
+                
+                <div class="tourist-item">
+                    <h4>🏛️ 홋카이도청 구 본청사 (적벽돌 청사)</h4>
+                    <p><strong>역사적 건물</strong>: 메이지시대 건축물, 아름다운 적벽돌 외관으로 유명</p>
+                    <p><strong>무료관람</strong>: 내부 견학 가능, 홋카이도 역사와 문화 전시</p>
+                    <p><strong>포토존</strong>: 벽돌 건축물의 고풍스러운 분위기로 인스타그램 명소</p>
+                    <p><strong>주소</strong>: 〒060-8588 Hokkaido, Sapporo, Chuo Ward, Kita 3 Jonishi, 6 Chome</p>
+                </div>
+                
+                <div class="tourist-item">
+                    <h4>🌆 JR 타워 전망실 T38</h4>
+                    <p><strong>최고층 전망</strong>: 38층 높이에서 삿포로 시내 360도 파노라마 조망</p>
+                    <p><strong>편리한 접근</strong>: JR 삿포로역 직결, 쇼핑과 관광을 함께 즐기기 좋음</p>
+                    <p><strong>야간추천</strong>: 삿포로의 야경을 한눈에 감상할 수 있는 최고의 스팟</p>
+                    <p><strong>주소</strong>: 〒060-0005 Hokkaido, Sapporo, Chuo Ward, Kita 5 Jonishi, 2 Chome JR Tower 38F</p>
+                </div>
+                
+                <div class="tourist-item">
+                    <h4>🗼 삿포로 TV 타워</h4>
+                    <p><strong>전망대</strong>: 147m 높이에서 삿포로 시내와 스스키노 지역 한눈에 조망</p>
+                    <p><strong>국가문화재</strong>: 2025년 3월 국가 등록 유형문화재 지정</p>
+                    <p><strong>야경명소</strong>: 오도리공원과 스스키노 네온사인이 어우러진 환상적 야경</p>
+                    <p><strong>주소</strong>: 〒060-0042 Hokkaido, Sapporo, Chuo Ward, Odorinishi, 1 Chome-2-5</p>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2><span class="emoji">🥩</span>징기스칸 (양고기 바베큐)</h2>
+                
+                <div class="restaurant">
+                    <h3><a href="https://triple.guide/restaurants/afbb5925-e396-4884-af74-c47a471d5d87" target="_blank">징기스칸 다루마 (ジンギスカン だるま)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">홋카이도 대표 징기스칸 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">삿포로에서 가장 유명한 징기스칸 맛집, 현지인과 관광객이 줄을 서는 곳</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노역 주변 (본점 및 5개 지점 운영)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒064-0805 Hokkaido, Sapporo, Chuo Ward, Minami 5 Jonishi, 4 Chome</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://blog.naver.com/plushpink/223604432314" target="_blank">시부키 (しぶき)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">징기스칸/고기구이</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">현지인들이 즐겨 찾는 숨은 맛집</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 지역</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒064-0804 Hokkaido, Sapporo, Chuo Ward, Minami 4 Jonishi, 3 Chome</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2><span class="emoji">🍣</span>스시/해산물</h2>
+                
+                <div class="restaurant">
+                    <h3><a href="https://www.sushi-hanamaru.com/la_kr/" target="_blank">네무로 하나마루 (根室花まる)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">회전초밥 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">홋카이도 네무로 항구에서 시작된 신선한 해산물 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">홋카이도 내 11개 지점, 도쿄 1개 지점 운영 중</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0005 Hokkaido, Sapporo, Chuo Ward, Kita 5 Jonishi, 2 Chome−5 JRタワーイースト</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://livejapan.com/ko/in-hokkaido/in-pref-hokkaido/in-sapporo_chitose/article-a1000240/" target="_blank">가니도라쿠 삿포로 본점 (かに道楽)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">홋카이도 대표 게 요리 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">1964년 창업한 일본 유일의 털게 요리 전문점, 한국인들이 많이 찾는 고급 게 요리 맛집</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 지역 니카상 근처 (숙소에서 도보 10분)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒064-0804 Hokkaido, Sapporo, Chuo Ward, Minami 4 Jonishi, 2 Chome</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2><span class="emoji">🍛</span>덮밥/정식</h2>
+                
+                <div class="restaurant">
+                    <h3><a href="https://m.blog.naver.com/ginna79/221279318518" target="_blank">잇핀 부타동 (いっぴん豚丼)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">부타동(돼지고기 덮밥) 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">돼지고기와 밥의 양을 자유롭게 선택 가능 (스몰, 레귤러, 라지)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로역 근처</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0004 Hokkaido, Sapporo, Chuo Ward, Kita 4 Jonishi, 1 Chome−5−3</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://kr.trip.com/moments/detail/sapporo-1878-119697820/" target="_blank">시하치 (SHIHACHI)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">카이센동(해산물 덮밥) 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">다누키코지 내 위치, 니조시장 대비 저렴한 가격의 10가지 해산물 덮밥</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">다누키코지 상점가 내</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0062 Hokkaido, Sapporo, Chuo Ward, Minami 2 Jonishi, 2 Chome−5 COMICHI내</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://www.haveagood-holiday.com/ko/articles/242365" target="_blank">니조시장 돈부리차야</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">해산물 덮밥 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">니조시장 내 위치, '황금 해산물 덮밥' 7가지 고급 해산물, 신치토세공항과 오타루에도 진출</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">니조시장 내</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0033 Hokkaido, Sapporo, Chuo Ward, Kita 3 Jonishi, 7 Chome</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2><span class="emoji">🍗</span>야키토리/이자카야</h2>
+                
+                <div class="restaurant">
+                    <h3><a href="https://blog.naver.com/mardukas/221924015876" target="_blank">야키토리 타케토라 (焼鳥竹虎)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">야키토리 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">정통 일본식 꼬치구이와 이자카야 분위기</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 지역</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒064-0804 Hokkaido, Sapporo, Chuo Ward, Minami 4 Jonishi, 4 Chome</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://japantravel.navitime.com/ko/area/jp/guide/NTJmeal0007-ko/" target="_blank">스기노 (すぎの)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">해산물 이자카야</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">삿포로역 근처 해산물 전문 이자카야, 어업 출신 사장의 엄선된 해산물 요리</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로역 남쪽 출구 도보 10분</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0003 Hokkaido, Sapporo, Chuo Ward, Kita 3 Jonishi, 4 Chome</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://hssjwebsite.com/entry/삿포로-아직-잘-알려지지않은-이자카야-맛집-일본-현지인-추천" target="_blank">히토리 나베 토키지 (ひとり鍋時治)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">전골 전문 이자카야</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">한국인들에게 아직 잘 알려지지 않은 숨은 맛집, 대창모인 나베와 게살고로케 추천</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 니카상에서 도보 10분 (지하 1층)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒064-0805 Hokkaido, Sapporo, Chuo Ward, Minami 5 Jonishi, 5 Chome</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2><span class="emoji">🍦</span>디저트 & 아이스크림</h2>
+                
+                <div class="restaurant">
+                    <h3><a href="https://www.nissei-com.co.jp/cremia/kr/" target="_blank">크레미아 (CREMIA)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">프리미엄 소프트 아이스크림 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">일본 최고급 소프트아이스크림, 벨벳처럼 부드러운 질감과 랑그드샤 콘</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 라멘거리 근처</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0062 Hokkaido, Sapporo, Chuo Ward, Minami 2 Jonishi, 5 Chome</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://myliving.net/entry/삿포로의-디저트-가게들-키노토야-카페-오도리공원-홋카이도-대학교-크라스-기타카로-본점-롯카테이-삿포로-본점-소프트-아이스크림-신한-더모아-카드-더블적립" target="_blank">롯카테이 삿포로 본점 (六花亭)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">홋카이도 대표 전통 과자점 & 카페</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">마루세이 아이스샌드 한정판매, 1933년 창업 노포, 삿포로/오비히로/로쿠노모리 한정</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로역 근처 (2층 카페 운영)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0004 Hokkaido, Sapporo, Chuo Ward, Kita 4 Jonishi, 6 Chome−3−3</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://livejapan.com/ko/in-hokkaido/in-pref-hokkaido/in-sapporo_chitose/article-a1000060/" target="_blank">노이몬드 오가닉 카페 (NOYMOND Organic Cafe)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">오가닉 재료 전문 디저트 카페</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">삿포로 특유의 '시메 파르페' 문화 - 식사 후 술과 함께 즐기는 파르페, 유기농 재료 고집</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 번화가 근처</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒064-0804 Hokkaido, Sapporo, Chuo Ward, Minami 4 Jonishi, 2 Chome</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://livejapan.com/ko/in-hokkaido/in-pref-hokkaido/in-sapporo_chitose/article-a1000060/" target="_blank">유키지루시 파라 (雪印パーラー)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">일본 유명 유제품 업체 직영 카페</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">1968년 쇼와 천황을 위해 개발된 전설의 '스노 로얄' 아이스크림</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">오도리역에서 도보 1분</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0042 Hokkaido, Sapporo, Chuo Ward, Odorinishi, 3 Chome</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2><span class="emoji">🛍️</span>애니메이션 & 피규어샵</h2>
+                
+                <div class="restaurant">
+                    <h3><a href="https://www.donki-global.com/kr/" target="_blank">돈키호테 스스키노점 (ドン・キホーテ)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">24시간 할인잡화점 (애니메이션 굿즈 코너 보유)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">일본 최대급 디스카운트 스토어, 피규어/애니메이션 굿즈부터 일용품까지 다양한 상품</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로시 타누키코지 상점가 4번가 (스스키노 도보 5분)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0063 Hokkaido, Sapporo, Chuo Ward, Minami 3 Jonishi, 4 Chome</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://www.animate-onlineshop.co.kr/" target="_blank">애니메이트 삿포로점 (アニメイト)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">일본 대표 애니메이션 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">최신 애니메이션 굿즈, 피규어, 한정판 상품 다수 보유</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로 중심가 (JR 삿포로역 근처)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0004 Hokkaido, Sapporo, Chuo Ward, Kita 4 Jonishi, 1 Chome−1</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://www.mandarake.co.jp/shop/spr/index.html" target="_blank">만다라케 삿포로점 (まんだらけ)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">일본 대표 오타쿠 중고상품 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">빈티지 피규어, 희귀 애니메이션 굿즈, 동인지 등 다양한 컬렉션</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로 중심가 (노르베사 빌딩 2층)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒064-0804 Hokkaido, Sapporo, Chuo Ward, Minami 3 Jonishi, 5 Chome−1−1</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://hokkaido.co.kr/삿포로-피규어샵-애니메이션-성지-만다라케스루가/" target="_blank">스루가야 노르베사점 (するが屋)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">대형 중고 애니메이션 굿즈 전문점 (1층, 3층 운영)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">1층: 원피스, 귀멸의 칼날, 주술회전, 드래곤볼, 포켓몬스터 등 / 3층: 치이카와, 산리오, 건담, 프라모델, 게임 굿즈</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">니카상 근처 노르베사 건물 (관람차가 있는 건물)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒064-0804 Hokkaido, Sapporo, Chuo Ward, Minami 3 Jonishi, 5 Chome-1-1</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://www.sofmap.com/" target="_blank">소프맵 삿포로점 (ソフマップ)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">게임, 애니메이션 굿즈, 중고 게임기 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">일본 전국 체인점, 중고 게임기부터 최신 게임 소프트, 애니메이션 관련 상품 다수 보유</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로 중심가 (JR 삿포로역 근처)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">주소</span>
+                            <span class="detail-value">일본 〒060-0005 Hokkaido, Sapporo, Chuo Ward, Kita 5 Jonishi, 2 Chome</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-section">
+                <h2><span class="emoji">🌃</span>스스키노 거리 야간 액티비티</h2>
+                
+				
+                <div class="activity-item">
+                    <h4>🍻 이자카야 & 술집 순례</h4>
+                    <p><strong>노포 요정 스기노메</strong>: 홋카이도 향토요리를 카운터에서 견학하며 즐기는 특별한 경험</p>
+                    <p><strong>로바타야키 우타리</strong>: 홋카이도에서 가장 오래된 로바타야키, 마무리는 노포 요정의 시메파르페</p>
+                    <p><strong>시메 파르페 문화</strong>: 삿포로 특유의 문화로 술 마신 후 디저트로 파르페를 즐기는 야간 활동</p>
+                </div>
+
+
+
+                <div class="activity-item">
+                    <h4>🍜 심야 맛집 & 라멘 투어</h4>
+                    <p><strong>원조 삿포로 라멘 골목</strong>: 라멘 구마키치, 시미지미 등 매일 새벽 5시까지 운영하는 유명 라멘집</p>
+                    <p><strong>신 라멘요코초</strong>: 아카렌가는 금요일·토요일 24시간 운영으로 언제든 삿포로 라멘 즐기기 가능</p>
+                    <p><strong>스스키노 수프 카레 나이트</strong>: 호시노 리조트 특별 액티비티, 수프 카레 맛집 탐방과 아이스크림 제공</p>
+                    <p><strong>스스키노 0번지 탐방</strong>: 삿포로에서 가장 오래된 지하 식당가 야간 워킹 투어</p>
+                </div>
+                
+	                <div class="activity-item">
+                    <h4>🌙 야경 & 산책</h4>
+                    <p><strong>탄누키코지 거리</strong>: 숙소에서 도보 5-10분, 150년 역사의 삿포로 최대 상점가에서 늦은 시간까지 쇼핑과 구경</p>
+                    <p><strong>소세이가와 강변 산책</strong>: 숙소에서 도보 5분, 삿포로 중심을 흐르는 강변의 조명 아래 여유로운 산책</p>
+                    <p><strong>나카지마공원 야간 산책</strong>: 지하철 이용 (나카지마코엔역), 스스키노 옆 도심 속 오아시스에서 조명 산책로 이용</p>
+                </div>
+
+                <div class="activity-item">
+                    <h4>🌆 야경 감상 & 일루미네이션</h4>
+                    <p><strong>스스키노 네온사인 거리</strong>: 약 3,500개 음식점이 밀집한 반짝이는 네온사인 거리 풍경</p>
+                    <p><strong>삿포로 TV 타워 전망</strong>: 147m 높이에서 도시와 산의 전망을 감상, 스스키노 지역이 한눈에 보임</p>
+                    <p><strong>삿포로 화이트 일루미네이션</strong>: 11월 하순부터 시작되는 겨울 일루미네이션 (오도리공원, 삿포로역 앞 광장)</p>
+                </div>
+                
+                <div class="activity-item">
+                    <h4>🛍️ 야간 쇼핑 & 애니메이션 탐방</h4>
+                    <p><strong>돈키호테 스스키노점</strong>: 24시간 운영하는 할인점으로 애니메이션 굿즈부터 일용품까지 보물찾기 쇼핑</p>
+                    <p><strong>노르베사 빌딩</strong>: 만다라케를 비롯한 다양한 서브컬처 상점들이 모여있는 복합쇼핑몰</p>
+                    <p><strong>애니메이트 & 소프맵</strong>: 최신 굿즈부터 레어 아이템까지, 오타쿠들의 성지</p>
+                </div>
+                				
+                <div class="activity-item">
+                    <h4>🎯 게임센터 & 오락시설</h4>
+                    <p><strong>라운드원 스스키노점</strong>: 볼링, 다트, 비디오게임, 오락기기 등이 있는 대형 오락시설</p>
+                    <p><strong>파칭코홀</strong>: 일본 특유의 파칭코 게임 체험 (관광객도 이용 가능)</p>
+                    <p><strong>게임센터</strong>: UFO캐처, 리듬게임, 격투게임 등을 즐길 수 있는 아케이드</p>
+                </div>
+               
+               
+               
+                <div class="activity-item">
+                    <h4>🏪 쇼핑 & 문화체험</h4>
+                    <p><strong>24시간 서점</strong>: 츠타야 등에서 일본 서적, 만화, DVD 구경</p>
+                    <p><strong>심야 드럭스토어</strong>: 마츠모토키요시 등에서 일본 화장품, 의약품 쇼핑</p>
+                    <p><strong>포토부스 체험</strong>: 일본식 프리쿠라(사진스티커) 촬영</p>
+                </div>
+                
+				
+            </div>
+        </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        // 지도 초기화
+        const map = L.map('map').setView([43.0553, 141.3544], 13);
+        
+        // OpenStreetMap 타일 레이어 추가 (모바일 호환성 개선)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18,
+            tileSize: 256,
+            zoomOffset: 0
+        }).addTo(map);
+        
+        // 모바일에서 지도 터치 문제 해결
+        map.on('focus', function() { map.scrollWheelZoom.disable(); });
+        map.on('blur', function() { map.scrollWheelZoom.enable(); });
+
+        // 커스텀 마커 아이콘 생성 함수
+        function createCustomIcon(emoji) {
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid #ff6b6b;">${emoji}</div>`,
+                iconSize: [35, 35],
+                iconAnchor: [17, 17]
+            });
+        }
+
+        // 숙소 마커
+        const hotelMarker = L.marker([43.0553, 141.3544], {
+            icon: createCustomIcon('🏨')
+        }).addTo(map);
+        hotelMarker.bindPopup('<b>🏨 몬테레이 에델호프 삿포로</b><br><a href="https://www.monterey-edelhof.jp/ko/" target="_blank">공식 웹사이트</a>');
+
+        // 관광지 마커들
+        const touristSpots = [
+	   {
+                name: '모이와산 야경',
+                coords: [43.0238, 141.3208],
+                emoji: '🌃',
+                popup: '<b>🌃 모이와산 야경</b><br>해발 531m 삿포로 3대 야경명소<br>일본 신3대 야경 중 하나<br>로프웨이로 접근 가능'
+            },
+            {
+                name: '시로이코이비토파크',
+                coords: [43.0913, 141.2713],
+                emoji: '🍫',
+                popup: '<b>🍫 시로이코이비토파크</b><br>초콜릿 테마파크<br>공장견학 및 체험시설<br>미야노사와역에서 도보 7분'
+            },	
+            {
+                name: '오도리공원',
+                coords: [43.0606, 141.3533],
+                emoji: '🌸',
+                popup: '<b>🌸 오도리공원</b><br>삿포로의 상징적 공원<br>1.5km 동서로 뻗은 도심 오아시스'
+            },
+            {
+                name: '삿포로 시계탑',
+                coords: [43.0620, 141.3510],
+                emoji: '🕐',
+                popup: '<b>🕐 삿포로 시계탑</b><br>1878년 건립 역사적 건물<br>구 삿포로 농학교 무술도장'
+            },
+            {
+                name: '니조시장',
+                coords: [43.0630, 141.3570],
+                emoji: '🦀',
+                popup: '<b>🦀 니조시장</b><br>메이지 초기부터 125년 역사<br>홋카이도 해산물의 메카'
+            },
+            {
+                name: '홋카이도청 구 본청사',
+                coords: [43.0650, 141.3480],
+                emoji: '🏛️',
+                popup: '<b>🏛️ 홋카이도청 구 본청사</b><br>적벽돌 청사<br>메이지시대 건축물'
+            },
+            {
+                name: 'JR 타워 전망실 T38',
+                coords: [43.0690, 141.3505],
+                emoji: '🌆',
+                popup: '<b>🌆 JR 타워 전망실 T38</b><br>38층 360도 파노라마 전망<br>삿포로역 직결'
+            }
+        ];
+
+        // 관광지 마커들 추가
+        touristSpots.forEach(spot => {
+            const marker = L.marker(spot.coords, {
+                icon: createCustomIcon(spot.emoji)
+            }).addTo(map);
+            marker.bindPopup(spot.popup);
+        });
+
+        // 맛집 마커들
+        const restaurants = [
+            {
+                name: '징기스칸 다루마 본점',
+                coords: [43.0535, 141.3556],
+                emoji: '🥩',
+                popup: '<b>🥩 징기스칸 다루마</b><br><a href="https://www.jingisukan-daruma.com/" target="_blank">공식 웹사이트</a>'
+            },
+            {
+                name: '네무로 하나마루',
+                coords: [43.0580, 141.3520],
+                emoji: '🍣',
+                popup: '<b>🍣 네무로 하나마루</b><br><a href="https://www.sushi-hanamaru.com/la_kr/" target="_blank">공식 웹사이트</a>'
+            },
+            {
+                name: '잇핀 부타동',
+                coords: [43.0642, 141.3516],
+                emoji: '🍛',
+                popup: '<b>🍛 잇핀 부타동</b><br>홋카이도 토카치 지역 특산 부타동'
+            },
+            {
+                name: '야키토리 타케토라',
+                coords: [43.0545, 141.3565],
+                emoji: '🍗',
+                popup: '<b>🍗 야키토리 타케토라</b><br>정통 일본식 이자카야'
+            },
+            {
+                name: '스기노',
+                coords: [43.0633, 141.3516],
+                emoji: '🐟',
+                popup: '<b>🐟 스기노</b><br>해산물 전문 이자카야<br>어업 출신 사장의 엄선된 해산물'
+            },
+            {
+                name: '히토리 나베 토키지',
+                coords: [43.0528, 141.3558],
+                emoji: '🍲',
+                popup: '<b>🍲 히토리 나베 토키지</b><br>현지인 추천 숨은 맛집<br>대창모인 나베와 게살고로케'
+            },
+            {
+                name: '시하치',
+                coords: [43.0605, 141.3555],
+                emoji: '🍙',
+                popup: '<b>🍙 시하치</b><br>카이센동 전문점<br>다누키코지 내 가성비 맛집'
+            },
+            {
+                name: '니조시장 돈부리차야',
+                coords: [43.0650, 141.3530],
+                emoji: '🍱',
+                popup: '<b>🍱 니조시장 돈부리차야</b><br>황금 해산물 덮밥<br>7가지 고급 해산물'
+            },
+            {
+                name: '가니도라쿠 삿포로 본점',
+                coords: [43.0540, 141.3560],
+                emoji: '🦀',
+                popup: '<b>🦀 가니도라쿠 삿포로 본점</b><br>홋카이도 대표 게 요리 전문점<br>1964년 창업 고급 게 요리 맛집'
+            }
+        ];
+
+        // 맛집 마커들 추가
+        restaurants.forEach(restaurant => {
+            const marker = L.marker(restaurant.coords, {
+                icon: createCustomIcon(restaurant.emoji)
+            }).addTo(map);
+            marker.bindPopup(restaurant.popup);
+        });
+
+        // 디저트 & 아이스크림 마커들
+        const dessertShops = [
+            {
+                name: '크레미아',
+                coords: [43.0590, 141.3520],
+                emoji: '🍦',
+                popup: '<b>🍦 크레미아 (CREMIA)</b><br>프리미엄 소프트 아이스크림<br>벨벳 질감의 최고급 맛'
+            },
+            {
+                name: '롯카테이 삿포로 본점',
+                coords: [43.0610, 141.3540],
+                emoji: '🧁',
+                popup: '<b>🧁 롯카테이 삿포로 본점</b><br>1933년 창업 노포<br>마루세이 아이스샌드 한정'
+            },
+            {
+                name: '노이몬드 오가닉 카페',
+                coords: [43.0535, 141.3555],
+                emoji: '🍨',
+                popup: '<b>🍨 노이몬드 오가닉 카페</b><br>삿포로 특유의 시메 파르페<br>오가닉 재료 전문'
+            },
+            {
+                name: '유키지루시 파라',
+                coords: [43.0620, 141.3530],
+                emoji: '🥛',
+                popup: '<b>🥛 유키지루시 파라</b><br>전설의 스노 로얄 아이스크림<br>쇼와 천황을 위해 개발'
+            }
+        ];
+
+        // 디저트샵 마커들 추가
+        dessertShops.forEach(shop => {
+            const marker = L.marker(shop.coords, {
+                icon: createCustomIcon(shop.emoji)
+            }).addTo(map);
+            marker.bindPopup(shop.popup);
+        });
+
+        // 애니메이션 & 피규어샵 마커들
+        const animeShops = [
+            {
+                name: '돈키호테 스스키노점',
+                coords: [43.0520, 141.3530],
+                emoji: '🛍️',
+                popup: '<b>🛍️ 돈키호테 스스키노점</b><br>24시간 운영 할인점<br>애니메이션 굿즈 & 피규어 코너'
+            },
+            {
+                name: '애니메이트 삿포로점',
+                coords: [43.0620, 141.3540],
+                emoji: '📚',
+                popup: '<b>📚 애니메이트 삿포로점</b><br>일본 대표 애니메이션 전문점<br>최신 굿즈 & 한정판 상품'
+            },
+            {
+                name: '만다라케 삿포로점',
+                coords: [43.0580, 141.3560],
+                emoji: '🪀',
+                popup: '<b>🪀 만다라케 삿포로점</b><br>세계 최대 만화·애니메이션 쇼핑몰<br>노르베사 빌딩 2층'
+            },
+            {
+                name: '스루가야 노르베사점',
+                coords: [43.0580, 141.3560],
+                emoji: '🎮',
+                popup: '<b>🎮 스루가야 노르베사점</b><br>대형 중고 애니메이션 굿즈 전문점<br>1층: 소년만화 / 3층: 캐릭터굿즈'
+            },
+            {
+                name: '소프맵 삿포로점',
+                coords: [43.0610, 141.3520],
+                emoji: '🎯',
+                popup: '<b>🎯 소프맵 삿포로점</b><br>게임, 애니메이션 굿즈 전문<br>중고 게임기 & 최신 소프트'
+            }
+        ];
+
+        // 애니메이션샵 마커들 추가
+        animeShops.forEach(shop => {
+            const marker = L.marker(shop.coords, {
+                icon: createCustomIcon(shop.emoji)
+            }).addTo(map);
+            marker.bindPopup(shop.popup);
+        });
+
+        // 스스키노 지역 마커
+        const susukino = L.marker([43.0540, 141.3550], {
+            icon: createCustomIcon('🌃')
+        }).addTo(map);
+        susukino.bindPopup('<b>🌃 스스키노 번화가</b><br>야간 액티비티와 네온사인 거리<br>약 3,500개 음식점 밀집');
+
+        // 삿포로 TV 타워 마커
+        const tvTower = L.marker([43.0606, 141.3563], {
+            icon: createCustomIcon('🗼')
+        }).addTo(map);
+        tvTower.bindPopup('<b>🗼 삿포로 TV 타워</b><br>147m 높이 전망대<br>2025년 국가 등록 유형문화재');
+        
+        // 스무스 탭 스크롤링
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+                    
