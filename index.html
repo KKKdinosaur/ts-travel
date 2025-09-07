@@ -591,7 +591,7 @@
             </div>
             
             <div class="category">
-                <h2><span class="emoji">🎁</span>저녁 도야 지역 특산품 & 명물</h2>
+                <h2><span class="emoji">🎁</span>도야 지역 특산품</h2>
                 
                 <div class="restaurant">
                     <h3><a href="https://www.wakasaimo.com/ko/shop/toyakohonten/" target="_blank">와카사이모 (若狹芋)</a></h3>
@@ -664,7 +664,7 @@
                 <h2><span class="emoji">🎆</span>도야 야간 액티비티</h2>
                 
                 <div class="activity-item">
-                    <h4>🎇 도야코 롱런 불꽃축제</h4>
+                    <h4>🎇 도야 롱런 불꽃축제</h4>
                     <p><strong>일본 최장 불꽃축제</strong>: 4월 하순~10월 말까지 매일 밤 20:45~21:05 (20분간)</p>
                     <p><strong>호수 위 불꽃</strong>: 유람선에서 발사하는 450발의 불꽃이 도야호 밤하늘과 호수면에 반사</p>
                     <p><strong>최고 관람지</strong>: 호텔 객실, 호반 산책로, 온천거리 어디서든 완벽한 뷰</p>
@@ -699,7 +699,7 @@
                 <h2><span class="emoji">🛍️</span>저녁 쇼핑 & 기념품</h2>
                 
                 <div class="activity-item">
-                    <h4>🏪 도야코 온천가 기념품 거리</h4>
+                    <h4>🏪 도야 온천가 기념품 거리</h4>
                     <p><strong>운영시간</strong>: 오후 6시~밤 10시까지 (대부분 상점)</p>
                     <p><strong>위치</strong>: 만세이카쿠 호텔에서 도보 2-3분 거리</p>
                     <p><strong>추천상품</strong>: 와카사이모 + 이모텐 세트, 홋카이도 한정 키트캣, 도야코 온천 입욕제</p>
@@ -723,7 +723,7 @@
                 <div class="info-grid">
                     <div><span class="highlight">숙소</span> <a href="https://www.hotelmonterey.co.jp/kr/edelhof/" target="_blank">몬테레이 에델호프 삿포로 (2박)</a></div>
                     <div><span class="highlight">지역</span> 삿포로 시내 중심가 (스스키노 일대)</div>
-					<div><span class="highlight">지도</span> 그림 클릭 시 구글 맵 해당 주소로 이동</div>
+					<div><span class="highlight">특이사항</span> 그림 클릭 시 구글 맵 해당 주소로 이동</div>
                 </div>
             </div>
             
@@ -744,6 +744,13 @@
                 </div>
 
 				 <div class="tourist-item">
+    				<h4>✨ 다누키코지 상점가</h4>
+    				<p><strong>홋카이도 최대 실내 상점가</strong>: 1873년 개설된 150년 전통의 아케이드형 쇼핑거리</p>
+    				<p><strong>주요 특징</strong>: 7개 블록에 걸쳐 200여 개 상점이 밀집한 전천후 쇼핑공간</p>
+    				<p><strong>접근성</strong>: 지하철 오도리역/스스키노역에서 도보 3분, 숙소에서 도보 5분</p>
+				</div>
+				
+				<div class="tourist-item">
                     <h4>🌸 오도리 공원</h4>
                     <p><strong>삿포로의 상징적 공원</strong>: 동서로 1.5km 뻗은 삿포로 중심부의 오아시스, 92종 4,700그루 나무로 둘러싸임</p>
                     <p><strong>계절별 축제</strong>: 겨울 눈축제, 봄 라일락축제, 여름 비어가든 &YOSAKOI축제, 가을 오텀페스트</p>
@@ -1445,6 +1452,12 @@
             icon: createCustomIcon('🌃')
         }).addTo(map);
         susukino.bindPopup('<b>🌃 스스키노 번화가</b><br>야간 액티비티와 네온사인 거리<br>약 3,500개 음식점 밀집<br><a href="https://maps.google.com/?q=43.05574352922085,141.3534265729573" target="_blank">🗺️ 구글 지도에서 보기</a>');
+
+		// 다누키코지 상점가 마커
+		const tanukikoji = L.marker([43.0572386, 141.352677], {
+    		icon: createCustomIcon('🛍️')
+		}).addTo(map);
+		tanukikoji.bindPopup('<b>🛍️ 다누키코지 상점가</b><br>150년 전통의 아케이드형 쇼핑거리<br>7개 블록에 200여 개 상점 밀집<br><a href="https://maps.google.com/?q=43.0572386,141.352677" target="_blank">🗺️ 구글 지도에서 보기</a>');
 
         // 삿포로 TV 타워 마커
         const tvTower = L.marker([43.06110470000001 , 141.3564246], {
