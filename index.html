@@ -1,10 +1,10 @@
-<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3.0">
-    <title>북해도</title>
+    <title>북해도 여행 가이드</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
         * {
             margin: 0;
@@ -247,6 +247,83 @@
             border-radius: 12px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             border-left: 3px solid #20bf6b;
+            transition: all 0.3s ease;
+        }
+        
+        .restaurant:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .restaurant-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .status-open {
+            background: #00b894;
+            color: white;
+        }
+        
+        .status-closing {
+            background: #fdcb6e;
+            color: white;
+        }
+        
+        .status-closed {
+            background: #e84393;
+            color: white;
+        }
+        
+        .directions-link {
+            background: #0984e3;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 0.8em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        
+        .directions-link:hover {
+            background: #2d3436;
+            transform: translateY(-1px);
+        }
+        
+        .distance-info {
+            background: rgba(116, 185, 255, 0.1);
+            border: 1px solid rgba(116, 185, 255, 0.3);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #0984e3;
         }
         
         .restaurant h3, .tourist-spot h3, .activity-item h4, .tourist-item h4 {
@@ -269,13 +346,6 @@
         .restaurant h3 a:hover, .tourist-spot h3 a:hover,
         .restaurant h3 a:active, .tourist-spot h3 a:active {
             color: #ff6b6b;
-        }
-        
-        .restaurant h3 a::after, .tourist-spot h3 a::after {
-            content: '🔗';
-            margin-left: 5px;
-            opacity: 0.7;
-            font-size: 0.8em;
         }
         
         .restaurant-details, .spot-details {
@@ -364,6 +434,58 @@
             font-weight: bold;
         }
         
+        .access-details {
+            margin: 15px 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .access-summary {
+            background: rgba(116, 185, 255, 0.8);
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .access-summary:hover {
+            background: rgba(116, 185, 255, 1);
+        }
+
+        .access-summary::after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .access-details[open] .access-summary::after {
+            transform: rotate(180deg);
+        }
+
+        .access-content {
+            padding: 15px;
+            background: white;
+            color: #000 !important;
+        }
+
+        .access-content p {
+            margin-bottom: 8px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            color: #000 !important;
+        }
+
+        .access-content strong {
+            color: #000 !important;
+        }
+        
         .leaflet-popup-content {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
             font-size: 13px;
@@ -394,68 +516,6 @@
             line-height: 30px;
         }
         
-		.access-details {
-    margin: 15px 0;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.access-summary {
-    background: rgba(116, 185, 255, 0.8);
-    color: white;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 0.9em;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: all 0.3s ease;
-}
-
-.access-summary:hover {
-    background: rgba(116, 185, 255, 1);
-}
-
-.access-summary::after {
-    content: '▼';
-    font-size: 0.8em;
-    transition: transform 0.3s ease;
-}
-
-.access-details[open] .access-summary::after {
-    transform: rotate(180deg);
-}
-
-.access-content {
-    padding: 15px;
-    background: white;
-    color: #000 !important; /* !important 추가 */
-}
-
-.access-content p {
-    margin-bottom: 8px;
-    font-size: 0.85em;
-    line-height: 1.4;
-    color: #000 !important; /* !important 추가 */
-}
-
-.access-content strong {
-    color: #000 !important; /* strong 태그도 명시적으로 지정 */
-}
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        max-height: 0;
-    }
-    to {
-        opacity: 1;
-        max-height: 500px;
-    }
-}
-		
         /* 터치 최적화 */
         .nav-tab, .day-card, .restaurant, .tourist-spot, .activity-item, .tourist-item {
             -webkit-tap-highlight-color: rgba(0,0,0,0.1);
@@ -508,6 +568,12 @@
             .map-container {
                 height: 300px;
             }
+            
+            .restaurant-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
         }
         
         /* 접근성 개선 */
@@ -531,8 +597,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>⛰️북해도</h1>
-			<h3>파란 버튼 클릭 시 이동</h3>
+            <h1>⛰️ 북해도 여행 가이드</h1>
+            <div class="subtitle">파란 버튼 클릭 시 해당 섹션으로 이동합니다</div>
         </div>
         
         <div class="navigation-tabs">
@@ -548,35 +614,35 @@
                 <div class="day-card">
                     <h3>🛫 1일차</h3>
                     <div class="location">인천공항 → 신치토세 → 노보리베츠 → 도야</div>
-                    <p><strong>10:05:</strong> 인천공항 출발 → 12:50 신치토세 공항 도착</p> <br/>
-                    <p><strong>13:30:</strong> 노보리베츠 이동 (이동시간 약 1시간)</p><br/>
-                    <p><strong>관광:</strong> 노보리베츠 지옥계곡 - 황화산 분화구의 용암계곡 탐방</p><br/>
-                    <p><strong>이동:</strong> 도야 호수로 이동 (약 1시간)</p><br/>
-                    <p><strong>18:00:</strong> 석식후 호텔 투숙 (지유시간)</p><br/>
+                    <p><strong>10:05:</strong> 인천공항 출발 → 12:50 신치토세 공항 도착</p>
+                    <p><strong>13:30:</strong> 노보리베츠 이동 (이동시간 약 1시간)</p>
+                    <p><strong>관광:</strong> 노보리베츠 지옥계곡 - 활화산 분화구의 용암계곡 탐방</p>
+                    <p><strong>이동:</strong> 도야 호수로 이동 (약 1시간)</p>
+                    <p><strong>18:00:</strong> 석식후 호텔 투숙 (지유시간)</p>
                 </div>
                 
                 <div class="day-card">
                     <h3>🌄 2일차</h3>
-                    <div class="location">도야 → 삿포로</div><br/>
-                    <p><strong>오전:</strong> 도야호 유람선 관광/ 쇼와신잔 화산& 우스산 로프웨이 체험</p><br/>
-                    <p><strong>중식:</strong> 후 삿포로 이동 (이동시간 약 2시간)</p><br/>
-                    <p><strong>오후:</strong> 삿포로 관광 - 삿포로 맥주박물관 관람 및 생맥주 시음, 오도리 공원 산책</p><br/>
-                    <p><strong>석식:</strong> 후 호텔 투숙 및 온천욕 휴식 (자유시간)</p><br/>
+                    <div class="location">도야 → 삿포로</div>
+                    <p><strong>오전:</strong> 도야호 유람선 관광/ 쇼와신잔 화산& 우스산 로프웨이 체험</p>
+                    <p><strong>중식:</strong> 후 삿포로 이동 (이동시간 약 2시간)</p>
+                    <p><strong>오후:</strong> 삿포로 관광 - 삿포로 맥주박물관 관람 및 생맥주 시음, 오도리 공원 산책</p>
+                    <p><strong>석식:</strong> 후 호텔 투숙 및 온천욕 휴식 (자유시간)</p>
                 </div>
                 
                 <div class="day-card">
                     <h3>🏙️ 3일차</h3>
-                    <div class="location">삿포로 → 오타루 → 삿포로</div><br/>
-                    <p><strong>오전:</strong> 오타루 이동 (이동시간 약 1시간) 관광 - 오타루 운하, 기타이치 유리공예 거리, 오르골 전시관</p><br/>
-                    <p><strong>오후:</strong> 중식 후 삿포로 복귀 - 삿포로 시내 북해도 신궁, 면세점쇼핑, 시내 자유시간</p><br/>
-                    <p><strong>석식:</strong> 후 호텔 투숙 (자유시간)</p><br/>
+                    <div class="location">삿포로 → 오타루 → 삿포로</div>
+                    <p><strong>오전:</strong> 오타루 이동 (이동시간 약 1시간) 관광 - 오타루 운하, 기타이치 유리공예 거리, 오르골 전시관</p>
+                    <p><strong>오후:</strong> 중식 후 삿포로 복귀 - 삿포로 시내 북해도 신궁, 면세점쇼핑, 시내 자유시간</p>
+                    <p><strong>석식:</strong> 후 호텔 투숙 (자유시간)</p>
                 </div>
                 
                 <div class="day-card">
-                    <h3>🛫 4일차</h3><br/>
-                    <div class="location">삿포로 → 신치토세 → 인천공항</div><br/>
-                    <p><strong>07:00-10:00:</strong> 호텔 조식 후 체크아웃</p><br/>
-                    <p><strong>10:30-14:05:</strong> 신치토세 국제공항 이동 후 비행기 탑승 → 17:05 인천 국제공항 도착</p><br/>
+                    <h3>🛫 4일차</h3>
+                    <div class="location">삿포로 → 신치토세 → 인천공항</div>
+                    <p><strong>07:00-10:00:</strong> 호텔 조식 후 체크아웃</p>
+                    <p><strong>10:30-14:05:</strong> 신치토세 국제공항 이동 후 비행기 탑승 → 17:05 인천 국제공항 도착</p>
                 </div>
             </div>
         </div>
@@ -591,10 +657,21 @@
             </div>
             
             <div class="category">
-                <h2><span class="emoji">🎁</span>도야 지역 특산품</h2>
+                <h2><span class="emoji">🍎</span>도야 지역 특산품</h2>
                 
                 <div class="restaurant">
-                    <h3><a href="https://www.wakasaimo.com/ko/shop/toyakohonten/" target="_blank">와카사이모 (若狹芋)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=42.5857748,140.7697763" target="_blank">와카사이모 (若狹芋)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-wakasaimo">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=42.5857748,140.7697763&daddr=42.5857748,140.7697763&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">대표상품</span>
@@ -602,7 +679,7 @@
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">제품명</span>
-                            <span class="detail-value">와카사이모, 이모텐(튀김 와카사이모), 자가키 소프트</span>
+                            <span class="detail-value">와카사이모, 이모텐(튀김 와카사이모), 잠가키 소프트</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">특징</span>
@@ -612,11 +689,29 @@
                             <span class="detail-label">추천</span>
                             <span class="detail-value">도야호 대표 명과, 본점에서만 맛볼 수 있는 갓 튀긴 이모텐 필수</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">9:00-18:00 (계절별 변동 가능)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-wakasaimo">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">5분</span> (약 400m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://www.tsunagujapan.com/ko/japan-only-kit-kat-flavor-guide-from-regional-to-limited/" target="_blank">홋카이도 한정 키트캣 & 과자류</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=42.5857748,140.7697763" target="_blank">홋카이도 한정 키트캣 & 과자류</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-kitkat">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=42.5857748,140.7697763&daddr=42.5857748,140.7697763&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">대표상품</span>
@@ -634,11 +729,29 @@
                             <span class="detail-label">추천</span>
                             <span class="detail-value">일본 여행 필수 기념품, 홋카이도 특산물 활용한 독특한 맛</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">8:00-20:00 (계절별 변동 가능)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-kitkat">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">7분</span> (약 550m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://toyako-bokutou.com/" target="_blank">도야호 에치고야 (洞爺湖越後屋)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=42.5857748,140.7697763" target="_blank">도야호 에치고야 (洞爺湖越後屋)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-echigoya">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=42.5857748,140.7697763&daddr=42.5857748,140.7697763&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">대표상품</span>
@@ -656,6 +769,13 @@
                             <span class="detail-label">추천</span>
                             <span class="detail-value">도야호만의 독특한 기념품, 풍당 풍미의 에치고야 만주</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">9:00-18:00 (계절별 변동 가능)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-echigoya">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">4분</span> (약 320m)
                     </div>
                 </div>
             </div>
@@ -699,7 +819,7 @@
                 <h2><span class="emoji">🛍️</span>저녁 쇼핑 & 기념품</h2>
                 
                 <div class="activity-item">
-                    <h4>🏪 도야 온천가 기념품 거리</h4>
+                    <h4>🪀 도야 온천가 기념품 거리</h4>
                     <p><strong>운영시간</strong>: 오후 6시~밤 10시까지 (대부분 상점)</p>
                     <p><strong>위치</strong>: 만세이카쿠 호텔에서 도보 2-3분 거리</p>
                     <p><strong>추천상품</strong>: 와카사이모 + 이모텐 세트, 홋카이도 한정 키트캣, 도야코 온천 입욕제</p>
@@ -709,21 +829,19 @@
                 <div class="activity-item">
                     <h4>🎁 기념품 패키지</h4>
                     <p><strong>와카사이모 본점</strong>: 갓 튀긴 이모텐 + 포장용 와카사이모</p>
-                    <p><strong>홋카이도 과자 세트</strong>: 키트캣 멜론맛 + 로이스 초콜릿 + 자가키 쿠키</p>
+                    <p><strong>홋카이도 과자 세트</strong>: 키트캣 멜론맛 + 로이스 초콜릿 + 잠가키 쿠키</p>
                     <p><strong>현지 술</strong>: 홋카이도 사케 미니병 + 도야코 맥주</p>
                 </div>
             </div>
         </div>
         
-		
-		
         <div class="content" id="sapporo">
             <div class="info-section">
                 <h3>🏨 숙소 & 위치 정보</h3>
                 <div class="info-grid">
                     <div><span class="highlight">숙소</span> <a href="https://www.hotelmonterey.co.jp/kr/edelhof/" target="_blank">몬테레이 에델호프 삿포로 (2박)</a></div>
                     <div><span class="highlight">지역</span> 삿포로 시내 중심가 (스스키노 일대)</div>
-					<div><span class="highlight">특이사항</span> 그림 클릭 시 구글 맵 해당 주소로 이동</div>
+                    <div><span class="highlight">특이사항</span> 그림 클릭 시 구글 맵 해당 주소로 이동</div>
                 </div>
             </div>
             
@@ -732,78 +850,65 @@
             </div>
 
             <div class="tourist-section">
-                <h2><span class="emoji">🏛️</span>숙소 근처 인기 관광지</h2>
+                <h2><span class="emoji">🛍️</span>숙소 근처 인기 관광지</h2>
                
-                
-
-				 <div class="tourist-item">
+                <div class="tourist-item">
                     <h4>✨ 스스키노 번화가</h4>
                     <p><strong>홋카이도 최대 환락가</strong>: 일본 3대 환락가 중 하나로 네온사인이 화려한 밤의 명소</p>
                     <p><strong>주요 특징</strong>: 수많은 레스토랑, 바, 이자카야가 밀집한 24시간 활기찬 지역</p>
                     <p><strong>접근성</strong>: 지하철 스스키노역에서 도보 1분, 숙소에서 도보 15분</p>
                 </div>
 
-				 <div class="tourist-item">
-    				<h4>🦝 다누키코지 상점가</h4>
-    				<p><strong>홋카이도 최대 실내 상점가</strong>: 1873년 개설된 150년 전통의 아케이드형 쇼핑거리</p>
-    				<p><strong>주요 특징</strong>: 7개 블록에 걸쳐 200여 개 상점이 밀집한 전천후 쇼핑공간</p>
-    				<p><strong>접근성</strong>: 지하철 오도리역/스스키노역에서 도보 3분, 숙소에서 도보 5분</p>
-				</div>
-				
-				<div class="tourist-item">
+                <div class="tourist-item">
+                    <h4>🦆 다누키코지 상점가</h4>
+                    <p><strong>홋카이도 최대 실내 상점가</strong>: 1873년 개설된 150년 전통의 아케이드형 쇼핑거리</p>
+                    <p><strong>주요 특징</strong>: 7개 블록에 걸쳐 200여 개 상점이 밀집한 전천후 쇼핑공간</p>
+                    <p><strong>접근성</strong>: 지하철 오도리역/스스키노역에서 도보 3분, 숙소에서 도보 5분</p>
+                </div>
+                
+                <div class="tourist-item">
                     <h4>🌸 오도리 공원</h4>
                     <p><strong>삿포로의 상징적 공원</strong>: 동서로 1.5km 뻗은 삿포로 중심부의 오아시스, 92종 4,700그루 나무로 둘러싸임</p>
                     <p><strong>계절별 축제</strong>: 겨울 눈축제, 봄 라일락축제, 여름 비어가든 &YOSAKOI축제, 가을 오텀페스트</p>
                     <p><strong>접근성</strong>: 지하철 오도리역에서 도보 3분, 숙소에서 도보 10분</p>
                 </div>
-				
-				<div class="tourist-item">
+                
+                <div class="tourist-item">
                     <h4>🦀 니조시장</h4>
                     <p><strong>전통 시장</strong>: 메이지 초기부터 125년 역사, 홋카이도 해산물의 메카</p>
                     <p><strong>먹거리</strong>: 신선한 카이센동, 킹크랩, 성게, 가리비 등 홋카이도 특산 해산물</p>
                     <p><strong>접근성</strong>: 오도리역에서 도보 7분, 소세이가와 연변의 아름다운 위치</p>
                 </div>
-				
-				
-				 <div class="tourist-item">
-                    <h4>🕐 삿포로 시계탑</h4>
+                
+                <div class="tourist-item">
+                    <h4>🕘 삿포로 시계탑</h4>
                     <p><strong>역사적 건물</strong>: 1878년 건립된 구 삿포로 농학교 무술도장, 홋카이도 대학의 전신</p>
                     <p><strong>체험</strong>: 1층 시계탑 역사, 2층 무술도장 분위기 체험 및 시계 기계 견학 가능</p>
                     <p><strong>접근성</strong>: 오도리역에서 도보 10분, 야간 일루미네이션 포토존으로 인기</p>
                 </div>
-				
-				
-				
+                
                 <div class="tourist-item">
-    <h4>🏔️  모이와 산 야경</h4>
-    <p><strong>삿포로 3대 야경명소</strong>: 해발 531m에서 내려다보는 삿포로 시내 전경, 일본 신3대 야경 중 하나</p>
-    <p><strong>로프웨이 운행</strong>: 중복삭도(케이블카) + 모이와스카이 리프트 2단계 이용, 약 10분 소요</p>
-    <p><strong>최적 관람시간</strong>: 일몰 30분 후~밤 10시, 겨울철 특히 아름다운 설경과 조명</p>
-    <p><strong>접근성</strong>: 시덴(노면전차) 로프웨이입구역에서 도보 8분 후 케이블카 탑승</p>
+                    <h4>🏔️ 모이와 산 야경</h4>
+                    <p><strong>삿포로 3대 야경명소</strong>: 해발 531m에서 내려다보는 삿포로 시내 전경, 일본 신 3대 야경 중 하나</p>
+                    <p><strong>로프웨이 운행</strong>: 중복삭도(케이블카) + 모이와스카이 리프트 2단계 이용, 약 10분 소요</p>
+                    <p><strong>최적 관람시간</strong>: 일몰 30분 후~밤 10시, 겨울철 특히 아름다운 설경과 조명</p>
+                    <p><strong>접근성</strong>: 시덴(노면전차) 로프웨이입구역에서 도보 8분 후 케이블카 탑승</p>
 
-		<details class="access-details">
-        <summary class="access-summary">🚇 숙소에서 가는 법</summary>
-        <div class="access-content">
-            <p><strong>총 소요시간</strong>: 약 40-50분 | <strong>비용</strong>: 편도 약 1,400엔</p>
-            <p><strong>1단계</strong>: 숙소 → 스스키노/니시4초메 정류장 (도보 5-10분)</p>
-            <p><strong>2단계</strong>: 시덴 2호선 → 로프웨이이리구치역 (15-20분, 210엔)</p>
-            <p><strong>3단계</strong>: 정류장 → 케이블카 산록역 (도보 8분)</p>
-            <p><strong>4단계</strong>: 모이와 로프웨이 + 스카이리프트 2단계 (총 7분)</p>
-            <p><strong>운행시간</strong>: 10:30-22:00 (동절기 11:00-22:00)</p>
-        </div>
-    </details>
-
-</div>
-
-
-
+                    <details class="access-details">
+                        <summary class="access-summary">🚇 숙소에서 가는 법</summary>
+                        <div class="access-content">
+                            <p><strong>총 소요시간</strong>: 약 40-50분 | <strong>비용</strong>: 편도 약 1,400엔</p>
+                            <p><strong>1단계</strong>: 숙소 → 스스키노/니시4초메 정류장 (도보 5-10분)</p>
+                            <p><strong>2단계</strong>: 시덴 2호선 → 로프웨이이리구치역 (15-20분, 210엔)</p>
+                            <p><strong>3단계</strong>: 정류장 → 케이블카 산록역 (도보 8분)</p>
+                            <p><strong>4단계</strong>: 모이와 로프웨이 + 스카이리프트 2단계 (총 7분)</p>
+                            <p><strong>운행시간</strong>: 10:30-22:00 (동절기 11:00-22:00)</p>
+                        </div>
+                    </details>
+                </div>
                           
-               
-                
-                
-                
                 <div class="tourist-item">
-                    <h4>🏛️ 홋카이도청 구 본청사 (적벽돌 청사)</h4>
+                    <h4>🛍️ 홋카이도청 구 본청사 (적벽돌 청사)</h4>
                     <p><strong>역사적 건물</strong>: 메이지시대 건축물, 아름다운 적벽돌 외관으로 유명</p>
                     <p><strong>무료관람</strong>: 내부 견학 가능, 홋카이도 역사와 문화 전시</p>
                     <p><strong>포토존</strong>: 벽돌 건축물의 고풍스러운 분위기로 인스타그램 명소</p>
@@ -821,15 +926,25 @@
                     <p><strong>전망대</strong>: 147m 높이에서 삿포로 시내와 스스키노 지역 한눈에 조망</p>
                     <p><strong>국가문화재</strong>: 2025년 3월 국가 등록 유형문화재 지정</p>
                     <p><strong>야경명소</strong>: 오도리공원과 스스키노 네온사인이 어우러진 환상적 야경</p>
-					
                 </div>
             </div>
             
             <div class="category">
                 <h2><span class="emoji">🥩</span>징기스칸 (양고기 바베큐)</h2>
                 
-                <div class="restaurant">
-                    <h3><a href="https://triple.guide/restaurants/afbb5925-e396-4884-af74-c47a471d5d87" target="_blank">징기스칸 다루마 (ジンギスカン だるま)</a></h3>
+                <article class="restaurant">
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0538364,141.3524624" target="_blank">징기스칸 다루마 (ジンギスカン だるま)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-daruma">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0538364,141.3524624&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -843,11 +958,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">스스키노역 주변 (본점 및 5개 지점 운영)</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">17:00-03:00 (지점별 상이)</span>
+                        </div>
                     </div>
-                </div>
+                    <div class="distance-info" id="distance-daruma">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">8분</span> (약 650m)
+                    </div>
+                </article>
                 
                 <div class="restaurant">
-                    <h3><a href="https://blog.naver.com/plushpink/223604432314" target="_blank">시부키 (しぶき)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.05605800000001,141.3519858" target="_blank">시부키 (しぶき)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-shibuki">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.05605800000001,141.3519858&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -861,6 +994,13 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">스스키노 지역</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">17:00-23:00 (월요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-shibuki">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">6분</span> (약 500m)
                     </div>
                 </div>
             </div>
@@ -869,7 +1009,18 @@
                 <h2><span class="emoji">🍣</span>스시/해산물</h2>
                 
                 <div class="restaurant">
-                    <h3><a href="https://www.sushi-hanamaru.com/la_kr/" target="_blank">네무로 하나마루 (根室花まる)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0681096,141.3518039" target="_blank">네무로 하나마루 (根室花まる)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-hanamaru">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0681096,141.3518039&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -883,11 +1034,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">홋카이도 내 11개 지점, 도쿄 1개 지점 운영 중</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:00-22:00 (지점별 상이)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-hanamaru">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">4분</span> (약 300m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://livejapan.com/ko/in-hokkaido/in-pref-hokkaido/in-sapporo_chitose/article-a1000240/" target="_blank">가니도라쿠 삿포로 본점 (かに道楽)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0617713,141.3544506" target="_blank">가니도라쿠 삿포로 본점 (かに道楽)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-kanidoraku">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0617713,141.3544506&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -901,7 +1070,13 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">스스키노 지역 니카상 근처 (숙소에서 도보 10분)</span>
                         </div>
-
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:30-22:00 (예약 권장)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-kanidoraku">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">6분</span> (약 450m)
                     </div>
                 </div>
             </div>
@@ -910,7 +1085,18 @@
                 <h2><span class="emoji">🍛</span>덮밥/정식</h2>
                 
                 <div class="restaurant">
-                    <h3><a href="https://m.blog.naver.com/ginna79/221279318518" target="_blank">잇핀 부타동 (いっぴん豚丼)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0680504,141.3514557" target="_blank">잇핀 부타동 (いっぴん豚丼)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-butadon">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0680504,141.3514557&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -924,11 +1110,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">삿포로역 근처</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:00-20:00 (일요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-butadon">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">7분</span> (약 550m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://kr.trip.com/moments/detail/sapporo-1878-119697820/" target="_blank">시하치 (SHIHACHI)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0580374,141.3552807" target="_blank">시하치 (SHIHACHI)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-shihachi">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0580374,141.3552807&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -942,11 +1146,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">다누키코지 상점가 내</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:00-21:00 (무휴)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-shihachi">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">3분</span> (약 240m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://www.haveagood-holiday.com/ko/articles/242365" target="_blank">니조시장 돈부리차야</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.058299,141.358446" target="_blank">니조시장 돈부리차야</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-donburichaya">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.058299,141.358446&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -960,15 +1182,33 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">니조시장 내</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">6:00-14:00 (화요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-donburichaya">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">12분</span> (약 950m)
                     </div>
                 </div>
             </div>
             
             <div class="category">
-                <h2><span class="emoji">🍗</span>야키토리/이자카야</h2>
+                <h2><span class="emoji">🍖</span>야키토리/이자카야</h2>
                 
                 <div class="restaurant">
-                    <h3><a href="https://blog.naver.com/mardukas/221924015876" target="_blank">야키토리 타케토라 (焼鳥竹虎)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0563576,141.3568789" target="_blank">야키토리 타케토라 (焼鳥竹虎)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-taketora">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0563576,141.3568789&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -982,11 +1222,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">스스키노 지역</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">17:00-24:00 (일요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-taketora">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">8분</span> (약 630m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://japantravel.navitime.com/ko/area/jp/guide/NTJmeal0007-ko/" target="_blank">스기노 (すぎの)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0540969,141.3512925" target="_blank">스기노 (すぎの)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-sugino">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0540969,141.3512925&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -1000,12 +1258,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">삿포로역 남쪽 출구 도보 10분</span>
                         </div>
-
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">17:00-23:00 (수요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-sugino">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">10분</span> (약 780m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://hssjwebsite.com/entry/삿포로-아직-잘-알려지지않은-이자카야-맛집-일본-현지인-추천" target="_blank">히토리 나베 토키지 (ひとり鍋時治)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0505931,141.3421023" target="_blank">히토리 나베 토키지 (ひとり鍋時治)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-tokiji">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0505931,141.3421023&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -1013,13 +1288,19 @@
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">특징</span>
-                            <span class="detail-value">한국인들에게 아직 잘 알려지지 않은 숨은 맛집, 대창모인 나베와 게살고로케 추천</span>
+                            <span class="detail-value">한국인들에게 아직 잘 알려지지 않은 숨은 맛집, 대창모츠 나베와 게살고로케 추천</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">위치</span>
                             <span class="detail-value">스스키노 니카상에서 도보 10분 (지하 1층)</span>
                         </div>
-
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">18:00-24:00 (일요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-tokiji">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">15분</span> (약 1.2km)
                     </div>
                 </div>
             </div>
@@ -1028,7 +1309,18 @@
                 <h2><span class="emoji">🍦</span>디저트 & 아이스크림</h2>
                 
                 <div class="restaurant">
-                    <h3><a href="https://www.nissei-com.co.jp/cremia/kr/" target="_blank">크레미아 (CREMIA)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.057217,141.3510505" target="_blank">크레미아 (CREMIA)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-cremia">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.057217,141.3510505&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -1042,12 +1334,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">스스키노 라멘거리 근처</span>
                         </div>
-
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">10:00-22:00 (계절별 변동)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-cremia">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">9분</span> (약 700m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://myliving.net/entry/삿포로의-디저트-가게들-키노토야-카페-오도리공원-홋카이도-대학교-크라스-기타카로-본점-롯카테이-삿포로-본점-소프트-아이스크림-신한-더모아-카드-더블적립" target="_blank">롯카테이 삿포로 본점 (六花亭)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0660965,141.3465712" target="_blank">롯카테이 삿포로 본점 (六花亭)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-rokkakei">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0660965,141.3465712&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -1061,12 +1370,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">삿포로역 근처 (2층 카페 운영)</span>
                         </div>
-
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">9:00-19:00 (카페: 10:00-17:00)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-rokkakei">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">5분</span> (약 400m)
                     </div>
                 </div>
                                 
                 <div class="restaurant">
-                    <h3><a href="https://livejapan.com/ko/in-hokkaido/in-pref-hokkaido/in-sapporo_chitose/article-a1000060/" target="_blank">유키지루시 파라 (雪印パーラー)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0637848,141.3526114" target="_blank">유키지루시 파라 (雪印パーラー)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-yukijirushi">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0637848,141.3526114&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -1080,7 +1406,13 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">오도리역에서 도보 1분</span>
                         </div>
-
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">10:00-19:00 (무휴)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-yukijirushi">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">7분</span> (약 550m)
                     </div>
                 </div>
             </div>
@@ -1089,7 +1421,18 @@
                 <h2><span class="emoji">🛍️</span>애니메이션 & 피규어샵</h2>
                 
                 <div class="restaurant">
-                    <h3><a href="https://www.donki-global.com/kr/" target="_blank">돈키호테 스스키노점 (ドン・キホーテ)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0548352,141.3539017" target="_blank">돈키호테 스스키노점 (ドン・キホーテ)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-donki">
+                                <i class="fas fa-clock"></i>
+                                <span>24시간</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0548352,141.3539017&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -1103,12 +1446,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">삿포로시 타누키코지 상점가 4번가 (스스키노 도보 5분)</span>
                         </div>
-
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">24시간 연중무휴</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-donki">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">5분</span> (약 400m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://www.animate-onlineshop.co.kr/" target="_blank">애니메이트 삿포로점 (アニメイト)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.05871044128256,141.35600924491882" target="_blank">애니메이트 삿포로점 (アニメイト)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-animate">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.05871044128256,141.35600924491882&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -1122,11 +1482,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">삿포로 중심가 (JR 삿포로역 근처)</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">10:00-21:00 (무휴)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-animate">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">8분</span> (약 650m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://www.mandarake.co.jp/shop/spr/index.html" target="_blank">만다라케 삿포로점 (まんだらけ)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0559428,141.3511392" target="_blank">만다라케 삿포로점 (まんだらけ)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-mandarake">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0559428,141.3511392&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -1140,12 +1518,29 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">삿포로 중심가 (노르베사 빌딩 2층)</span>
                         </div>
-
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">12:00-20:00 (무휴)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-mandarake">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">9분</span> (약 720m)
                     </div>
                 </div>
                 
                 <div class="restaurant">
-                    <h3><a href="https://hokkaido.co.kr/삿포로-피규어샵-애니메이션-성지-만다라케스루가/" target="_blank">스루가야 노르베사점 (するが屋)</a></h3>
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0561365,141.3508939" target="_blank">스루가야 노르베사점 (するが屋)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-surugaya">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0561365,141.3508939&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
@@ -1159,17 +1554,20 @@
                             <span class="detail-label">위치</span>
                             <span class="detail-value">니카상 근처 노르베사 건물 (관람차가 있는 건물)</span>
                         </div>
-
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:00-20:00 (무휴)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-surugaya">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">9분</span> (약 720m)
                     </div>
                 </div>
-                
-              
             </div>
             
             <div class="activity-section">
                 <h2><span class="emoji">🌃</span>스스키노 거리 야간 액티비티</h2>
                 
-				
                 <div class="activity-item">
                     <h4>🍻 이자카야 & 술집 순례</h4>
                     <p><strong>노포 요정 스기노메</strong>: 홋카이도 향토요리를 카운터에서 견학하며 즐기는 특별한 경험</p>
@@ -1177,17 +1575,15 @@
                     <p><strong>시메 파르페 문화</strong>: 삿포로 특유의 문화로 술 마신 후 디저트로 파르페를 즐기는 야간 활동</p>
                 </div>
 
-
-
                 <div class="activity-item">
                     <h4>🍜 심야 맛집 & 라멘 투어</h4>
                     <p><strong>원조 삿포로 라멘 골목</strong>: 라멘 구마키치, 시미지미 등 매일 새벽 5시까지 운영하는 유명 라멘집</p>
-                    <p><strong>신 라멘요코초</strong>: 아카렌가는 금요일·토요일 24시간 운영으로 언제든 삿포로 라멘 즐기기 가능</p>
+                    <p><strong>신 라멘요코초</strong>: 아카렐가는 금요일·토요일 24시간 운영으로 언제든 삿포로 라멘 즐기기 가능</p>
                     <p><strong>스스키노 수프 카레 나이트</strong>: 호시노 리조트 특별 액티비티, 수프 카레 맛집 탐방과 아이스크림 제공</p>
                     <p><strong>스스키노 0번지 탐방</strong>: 삿포로에서 가장 오래된 지하 식당가 야간 워킹 투어</p>
                 </div>
-                
-	                <div class="activity-item">
+				
+                <div class="activity-item">
                     <h4>🌙 야경 & 산책</h4>
                     <p><strong>탄누키코지 거리</strong>: 숙소에서 도보 5-10분, 150년 역사의 삿포로 최대 상점가에서 늦은 시간까지 쇼핑과 구경</p>
                     <p><strong>소세이가와 강변 산책</strong>: 숙소에서 도보 5분, 삿포로 중심을 흐르는 강변의 조명 아래 여유로운 산책</p>
@@ -1215,18 +1611,15 @@
                     <p><strong>게임센터</strong>: UFO캐처, 리듬게임, 격투게임 등을 즐길 수 있는 아케이드</p>
                 </div>
                
-               
-               
                 <div class="activity-item">
                     <h4>🏪 쇼핑 & 문화체험</h4>
                     <p><strong>24시간 서점</strong>: 츠타야 등에서 일본 서적, 만화, DVD 구경</p>
                     <p><strong>심야 드럭스토어</strong>: 마츠모토키요시 등에서 일본 화장품, 의약품 쇼핑</p>
                     <p><strong>포토부스 체험</strong>: 일본식 프리쿠라(사진스티커) 촬영</p>
                 </div>
-                
-				
             </div>
         </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
@@ -1263,7 +1656,7 @@
 
         // 관광지 마커들
         const touristSpots = [
-	   {
+           {
                 name: '모이와 산',
                 coords: [43.0230805, 141.3223676],
                 emoji: '⛰️',
@@ -1278,8 +1671,8 @@
             {
                 name: '삿포로 시계탑',
                 coords: [43.0625768 , 141.3534927],
-                emoji: '🕐',
-                popup: '<b>🕐 삿포로 시계탑</b><br>1878년 건립 역사적 건물<br>구 삿포로 농학교 무술도장<br><a href="https://maps.google.com/?q=43.0625768,141.3534927" target="_blank">🗺️ 구글 지도에서 보기</a>'
+                emoji: '🕘',
+                popup: '<b>🕘 삿포로 시계탑</b><br>1878년 건립 역사적 건물<br>구 삿포로 농학교 무술도장<br><a href="https://maps.google.com/?q=43.0625768,141.3534927" target="_blank">🗺️ 구글 지도에서 보기</a>'
             },
             {
                 name: '니조시장',
@@ -1290,8 +1683,8 @@
             {
                 name: '홋카이도청 구 본청사',
                 coords: [43.06439, 141.3468805],
-                emoji: '🏛️',
-                popup: '<b>🏛️ 홋카이도청 구 본청사</b><br>적벽돌 청사<br>메이지시대 건축물<br><a href="https://maps.google.com/?q=43.06439,141.3468805" target="_blank">🗺️ 구글 지도에서 보기</a>'
+                emoji: '🛍️',
+                popup: '<b>🛍️ 홋카이도청 구 본청사</b><br>적벽돌 청사<br>메이지시대 건축물<br><a href="https://maps.google.com/?q=43.06439,141.3468805" target="_blank">🗺️ 구글 지도에서 보기</a>'
             },
             {
                 name: 'JR 타워 전망실 T38',
@@ -1317,7 +1710,7 @@
                 emoji: '🥩',
                 popup: '<b>🥩 징기스칸 다루마</b><br><a href="https://www.jingisukan-daruma.com/" target="_blank">공식 웹사이트</a><br><a href="https://maps.google.com/?q=43.0538364,141.3524624" target="_blank">🗺️ 구글 지도에서 보기</a>'
             },
-			{
+            {
                 name: '시부키',
                 coords: [43.05605800000001, 141.3519858],
                 emoji: '🥩',
@@ -1338,8 +1731,8 @@
             {
                 name: '야키토리 타케토라',
                 coords: [43.0563576 , 141.3568789],
-                emoji: '🍗',
-                popup: '<b>🍗 야키토리 타케토라</b><br>정통 일본식 이자카야<br><a href="https://maps.google.com/?q=43.0563576 , 141.3568789" target="_blank">🗺️ 구글 지도에서 보기</a>'
+                emoji: '🍖',
+                popup: '<b>🍖 야키토리 타케토라</b><br>정통 일본식 이자카야<br><a href="https://maps.google.com/?q=43.0563576 , 141.3568789" target="_blank">🗺️ 구글 지도에서 보기</a>'
             },
             {
                 name: '스기노',
@@ -1351,7 +1744,7 @@
                 name: '히토리 나베 토키지',
                 coords: [43.0505931 , 141.3421023],
                 emoji: '🍲',
-                popup: '<b>🍲 히토리 나베 토키지</b><br>현지인 추천 숨은 맛집<br>대창모인 나베와 게살고로케<br><a href="https://maps.google.com/?q=43.0505931 , 141.3421023" target="_blank">🗺️ 구글 지도에서 보기</a>'
+                popup: '<b>🍲 히토리 나베 토키지</b><br>현지인 추천 숨은 맛집<br>대창모츠 나베와 게살고로케<br><a href="https://maps.google.com/?q=43.0505931 , 141.3421023" target="_blank">🗺️ 구글 지도에서 보기</a>'
             },
             {
                 name: '시하치',
@@ -1399,7 +1792,7 @@
                 name: '유키지루시 파라',
                 coords: [43.0637848 , 141.3526114],
                 emoji: '🥛',
-                popup: '<b>🥛 유키지루시 파라</b><br>전설의 스노 로열 아이스크림<br>쇼와 천황을 위해 개발<br><a href="https://maps.google.com/?q=43.0637848,141.3526114" target="_blank">🗺️ 구글 지도에서 보기</a>'
+                popup: '<b>🥛 유키지루시 파라</b><br>전설의 스노 로얄 아이스크림<br>쇼와 천황을 위해 개발<br><a href="https://maps.google.com/?q=43.0637848,141.3526114" target="_blank">🗺️ 구글 지도에서 보기</a>'
             }
         ];
 
@@ -1453,11 +1846,11 @@
         }).addTo(map);
         susukino.bindPopup('<b>🌃 스스키노 번화가</b><br>야간 액티비티와 네온사인 거리<br>약 3,500개 음식점 밀집<br><a href="https://maps.google.com/?q=43.05574352922085,141.3534265729573" target="_blank">🗺️ 구글 지도에서 보기</a>');
 
-		// 다누키코지 상점가 마커
-		const tanukikoji = L.marker([43.0572386, 141.352677], {
-    		icon: createCustomIcon('🦝')
-		}).addTo(map);
-		tanukikoji.bindPopup('<b>🦝 다누키코지 상점가</b><br>150년 전통의 아케이드형 쇼핑거리<br>7개 블록에 200여 개 상점 밀집<br><a href="https://maps.google.com/?q=43.0572386,141.352677" target="_blank">🗺️ 구글 지도에서 보기</a>');
+        // 다누키코지 상점가 마커
+        const tanukikoji = L.marker([43.0572386, 141.352677], {
+            icon: createCustomIcon('🦆')
+        }).addTo(map);
+        tanukikoji.bindPopup('<b>🦆 다누키코지 상점가</b><br>150년 전통의 아케이드형 쇼핑거리<br>7개 블록에 200여 개 상점 밀집<br><a href="https://maps.google.com/?q=43.0572386,141.352677" target="_blank">🗺️ 구글 지도에서 보기</a>');
 
         
         // 삿포로 TV 타워 마커
@@ -1466,20 +1859,108 @@
         }).addTo(map);
         tvTower.bindPopup('<b>🗼 삿포로 TV 타워</b><br>147m 높이 전망대<br>2025년 국가 등록 유형문화재<br><a href="https://maps.google.com/?q=43.06110470000001,141.3564246" target="_blank">🗺️ 구글 지도에서 보기</a>');
         
-        // 스무스 탭 스크롤링
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const targetElement = document.getElementById(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+        // 네비게이션 설정
+        function setupNavigation() {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // 현재 시간 기반 영업상태 확인
+        function getBusinessStatus(hours) {
+            const now = new Date();
+            const currentHour = now.getHours() + now.getMinutes() / 60;
+            
+            let isOpen;
+            if (hours.close > 24) {
+                // 새벽까지 영업하는 경우
+                isOpen = currentHour >= hours.open || currentHour <= (hours.close - 24);
+            } else {
+                isOpen = currentHour >= hours.open && currentHour <= hours.close;
+            }
+            
+            let status = 'closed';
+            let text = '영업종료';
+            
+            if (isOpen) {
+                const closeTime = hours.close > 24 ? hours.close - 24 : hours.close;
+                const timeToClose = closeTime - currentHour;
+                
+                if (timeToClose <= 1 && timeToClose > 0) {
+                    status = 'closing';
+                    text = '곧 마감';
+                } else {
+                    status = 'open';
+                    text = '영업중';
+                }
+            }
+            
+            return { status, text };
+        }
+
+        // 영업상태 업데이트
+        function updateBusinessStatus() {
+            const restaurants = [
+                // 도야 지역
+                { id: 'wakasaimo', hours: { open: 9, close: 18 } },
+                { id: 'kitkat', hours: { open: 8, close: 20 } },
+                { id: 'echigoya', hours: { open: 9, close: 18 } },
+                
+                // 삿포로 지역
+                { id: 'daruma', hours: { open: 17, close: 27 } }, // 17:00-03:00
+                { id: 'shibuki', hours: { open: 17, close: 23 } }, // 17:00-23:00
+                { id: 'hanamaru', hours: { open: 11, close: 22 } }, // 11:00-22:00
+                { id: 'kanidoraku', hours: { open: 11.5, close: 22 } }, // 11:30-22:00
+                { id: 'butadon', hours: { open: 11, close: 20 } }, // 11:00-20:00
+                { id: 'shihachi', hours: { open: 11, close: 21 } }, // 11:00-21:00
+                { id: 'donburichaya', hours: { open: 6, close: 14 } }, // 6:00-14:00
+                { id: 'taketora', hours: { open: 17, close: 24 } }, // 17:00-24:00
+                { id: 'sugino', hours: { open: 17, close: 23 } }, // 17:00-23:00
+                { id: 'tokiji', hours: { open: 18, close: 24 } }, // 18:00-24:00
+                { id: 'cremia', hours: { open: 10, close: 22 } }, // 10:00-22:00
+                { id: 'rokkakei', hours: { open: 9, close: 19 } }, // 9:00-19:00
+                { id: 'yukijirushi', hours: { open: 10, close: 19 } }, // 10:00-19:00
+                { id: 'animate', hours: { open: 10, close: 21 } }, // 10:00-21:00
+                { id: 'mandarake', hours: { open: 12, close: 20 } }, // 12:00-20:00
+                { id: 'surugaya', hours: { open: 11, close: 20 } }, // 11:00-20:00
+            ];
+
+            restaurants.forEach(restaurant => {
+                const statusInfo = getBusinessStatus(restaurant.hours);
+                const statusElement = document.getElementById(`status-${restaurant.id}`);
+                
+                if (statusElement) {
+                    statusElement.className = `status-indicator status-${statusInfo.status}`;
+                    statusElement.querySelector('span').textContent = statusInfo.text;
                 }
             });
+            
+            // 돈키호테는 24시간이므로 별도 처리
+            const donkiElement = document.getElementById('status-donki');
+            if (donkiElement) {
+                donkiElement.className = 'status-indicator status-open';
+                donkiElement.querySelector('span').textContent = '24시간';
+            }
+        }
+
+        // 초기화 - 페이지 로드 시 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            setupNavigation();
+            updateBusinessStatus();
+            
+            // 30분마다 영업상태 업데이트
+            setInterval(updateBusinessStatus, 30 * 60 * 1000);
         });
     </script>
 </body>
-</html>
+</html><!DOCTYPE html>                
