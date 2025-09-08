@@ -397,7 +397,21 @@
             margin-bottom: 20px;
             font-size: 1.6em;
         }
+                .tourist-section .tourist-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-left: 3px solid #feca57;
+            margin-bottom: 15px;
+        }
         
+        .tourist-section .directions-link {
+            background: #ff7675;
+            color: white;
+        }
+        
+        .tourist-section .directions-link:hover {
+            background: #e84393;
+        }
         .activity-section .activity-item, .tourist-section .tourist-item {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
@@ -850,45 +864,87 @@
             </div>
 
             <div class="tourist-section">
-                <h2><span class="emoji">🛍️</span>숙소 근처 인기 관광지</h2>
+                <h2><span class="emoji">🏛️</span>숙소 근처 인기 관광지</h2>
                
                 <div class="tourist-item">
-                    <h4>✨ 스스키노 번화가</h4>
+                    <div class="restaurant-header">
+                        <h4>✨ 스스키노 번화가</h4>
+                        <div class="header-actions">
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.05574352922085,141.3534265729573&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <p><strong>홋카이도 최대 환락가</strong>: 일본 3대 환락가 중 하나로 네온사인이 화려한 밤의 명소</p>
                     <p><strong>주요 특징</strong>: 수많은 레스토랑, 바, 이자카야가 밀집한 24시간 활기찬 지역</p>
                     <p><strong>접근성</strong>: 지하철 스스키노역에서 도보 1분, 숙소에서 도보 15분</p>
                 </div>
 
                 <div class="tourist-item">
-                    <h4>🦆 다누키코지 상점가</h4>
+                    <div class="restaurant-header">
+                        <h4>🦆 다누키코지 상점가</h4>
+                        <div class="header-actions">
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0572386,141.352677&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <p><strong>홋카이도 최대 실내 상점가</strong>: 1873년 개설된 150년 전통의 아케이드형 쇼핑거리</p>
                     <p><strong>주요 특징</strong>: 7개 블록에 걸쳐 200여 개 상점이 밀집한 전천후 쇼핑공간</p>
                     <p><strong>접근성</strong>: 지하철 오도리역/스스키노역에서 도보 3분, 숙소에서 도보 5분</p>
                 </div>
                 
                 <div class="tourist-item">
-                    <h4>🌸 오도리 공원</h4>
-                    <p><strong>삿포로의 상징적 공원</strong>: 동서로 1.5km 뻗은 삿포로 중심부의 오아시스, 92종 4,700그루 나무로 둘러싸임</p>
+                    <div class="restaurant-header">
+                        <h4>🌸 오도리 공원</h4>
+                        <div class="header-actions">
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.060759466895696,141.354421377182&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
+                    <p><strong>삿포로의 상징적 공원</strong>: 동서로 1.5km 뻗은 삿포로 중심부의 오아시스, 92종 4,700그루 나무로 둘러쌈</p>
                     <p><strong>계절별 축제</strong>: 겨울 눈축제, 봄 라일락축제, 여름 비어가든 &YOSAKOI축제, 가을 오텀페스트</p>
                     <p><strong>접근성</strong>: 지하철 오도리역에서 도보 3분, 숙소에서 도보 10분</p>
                 </div>
                 
                 <div class="tourist-item">
-                    <h4>🦀 니조시장</h4>
+                    <div class="restaurant-header">
+                        <h4>🦀 니조시장</h4>
+                        <div class="header-actions">
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.05829019196988,141.3582730293274&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <p><strong>전통 시장</strong>: 메이지 초기부터 125년 역사, 홋카이도 해산물의 메카</p>
                     <p><strong>먹거리</strong>: 신선한 카이센동, 킹크랩, 성게, 가리비 등 홋카이도 특산 해산물</p>
                     <p><strong>접근성</strong>: 오도리역에서 도보 7분, 소세이가와 연변의 아름다운 위치</p>
                 </div>
                 
                 <div class="tourist-item">
-                    <h4>🕘 삿포로 시계탑</h4>
+                    <div class="restaurant-header">
+                        <h4>🕘 삿포로 시계탑</h4>
+                        <div class="header-actions">
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0625768,141.3534927&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <p><strong>역사적 건물</strong>: 1878년 건립된 구 삿포로 농학교 무술도장, 홋카이도 대학의 전신</p>
                     <p><strong>체험</strong>: 1층 시계탑 역사, 2층 무술도장 분위기 체험 및 시계 기계 견학 가능</p>
                     <p><strong>접근성</strong>: 오도리역에서 도보 10분, 야간 일루미네이션 포토존으로 인기</p>
                 </div>
                 
                 <div class="tourist-item">
-                    <h4>🏔️ 모이와 산 야경</h4>
+                    <div class="restaurant-header">
+                        <h4>⛰️ 모이와 산 야경</h4>
+                        <div class="header-actions">
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0230805,141.3223676&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <p><strong>삿포로 3대 야경명소</strong>: 해발 531m에서 내려다보는 삿포로 시내 전경, 일본 신 3대 야경 중 하나</p>
                     <p><strong>로프웨이 운행</strong>: 중복삭도(케이블카) + 모이와스카이 리프트 2단계 이용, 약 10분 소요</p>
                     <p><strong>최적 관람시간</strong>: 일몰 30분 후~밤 10시, 겨울철 특히 아름다운 설경과 조명</p>
@@ -908,21 +964,42 @@
                 </div>
                           
                 <div class="tourist-item">
-                    <h4>🛍️ 홋카이도청 구 본청사 (적벽돌 청사)</h4>
+                    <div class="restaurant-header">
+                        <h4>🏛️ 홋카이도청 구 본청사</h4>
+                        <div class="header-actions">
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.06439,141.3468805&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <p><strong>역사적 건물</strong>: 메이지시대 건축물, 아름다운 적벽돌 외관으로 유명</p>
                     <p><strong>무료관람</strong>: 내부 견학 가능, 홋카이도 역사와 문화 전시</p>
                     <p><strong>포토존</strong>: 벽돌 건축물의 고풍스러운 분위기로 인스타그램 명소</p>
                 </div>
                 
                 <div class="tourist-item">
-                    <h4>🌆 JR 타워 전망실 T38</h4>
+                    <div class="restaurant-header">
+                        <h4>🌆 JR 타워 전망실 T38</h4>
+                        <div class="header-actions">
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0681393,141.3524285&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <p><strong>최고층 전망</strong>: 38층 높이에서 삿포로 시내 360도 파노라마 조망</p>
                     <p><strong>편리한 접근</strong>: JR 삿포로역 직결, 쇼핑과 관광을 함께 즐기기 좋음</p>
                     <p><strong>야간추천</strong>: 삿포로의 야경을 한눈에 감상할 수 있는 최고의 스팟</p>
                 </div>
                 
                 <div class="tourist-item">
-                    <h4>🗼 삿포로 TV 타워</h4>
+                    <div class="restaurant-header">
+                        <h4>🗼 삿포로 TV 타워</h4>
+                        <div class="header-actions">
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.06110470000001,141.3564246&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
                     <p><strong>전망대</strong>: 147m 높이에서 삿포로 시내와 스스키노 지역 한눈에 조망</p>
                     <p><strong>국가문화재</strong>: 2025년 3월 국가 등록 유형문화재 지정</p>
                     <p><strong>야경명소</strong>: 오도리공원과 스스키노 네온사인이 어우러진 환상적 야경</p>
