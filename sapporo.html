@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3.0">
+    <title>삿포로 맛집 가이드</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            position: relative;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .navigation-tabs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+        }
+        
+        .nav-tab {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9em;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 45px;
+        }
+        
+        .nav-tab:hover, .nav-tab:active {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #0984e3, #74b9ff);
+        }
+        
+        .content {
+            padding: 20px 15px;
+        }
+        
+        .info-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-section h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+        
+        .info-section a {
+            color: #2d3436;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 2px 6px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+        
+        .info-section a:hover, .info-section a:active {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.02);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .map-container {
+            margin: 25px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            height: 350px;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+            touch-action: pan-x pan-y;
+        }
+        
+        .category {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 15px;
+            padding: 20px 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        .category h2 {
+            color: #ff6b6b;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #feca57;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .restaurant, .tourist-spot, .activity-item, .tourist-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-bottom: 20px;
+            padding: 18px 15px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left: 3px solid #20bf6b;
+        }
+        
+        .restaurant h3, .tourist-spot h3, .activity-item h4, .tourist-item h4 {
+            color: #2c3e50;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.3;
+        }
+        
+        .restaurant h3 a, .tourist-spot h3 a {
+            color: #2c3e50;
+            text-decoration: none;
+            word-break: break-all;
+            font-size: 1em;
+        }
+        
+        .restaurant h3 a:hover, .tourist-spot h3 a:hover,
+        .restaurant h3 a:active, .tourist-spot h3 a:active {
+            color: #ff6b6b;
+        }
+        
+        .restaurant h3 a::after, .tourist-spot h3 a::after {
+            content: '🔗';
+            margin-left: 5px;
+            opacity: 0.7;
+            font-size: 0.8em;
+        }
+        
+        .restaurant-details, .spot-details {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: white;
+            background: #feca57;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            text-align: center;
+            align-self: flex-start;
+            white-space: nowrap;
+        }
+        
+        .detail-value {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 5px;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #ff7675, #fd79a8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .leaflet-popup-content {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .leaflet-popup-content a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .leaflet-popup-content a:hover, .leaflet-popup-content a:active {
+            text-decoration: underline;
+        }
+        
+        .leaflet-container {
+            font-size: 14px;
+        }
+        
+        .leaflet-control-zoom {
+            font-size: 18px;
+        }
+        
+        .leaflet-control-zoom a {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+        }
+        
+        /* 터치 최적화 */
+        .nav-tab, .restaurant, .tourist-spot, .activity-item, .tourist-item {
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+        }
+        
+        /* 스크롤바 스타일링 (Webkit 기반 브라우저) */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+        
+        /* 더 큰 폰트 크기를 위한 미디어 쿼리 */
+        @media (max-width: 480px) {
+            body {
+                font-size: 15px;
+                padding: 5px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .navigation-tabs {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 12px;
+            }
+            
+            .nav-tab {
+                font-size: 0.9em;
+                padding: 12px;
+            }
+            
+            .category h2 {
+                font-size: 1.4em;
+            }
+            
+            .restaurant h3, .tourist-spot h3, .activity-item h4, .tourist-item h4 {
+                font-size: 1.1em;
+            }
+            
+            .map-container {
+                height: 300px;
+            }
+        }
+        
+        /* 접근성 개선 */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* 다크모드 지원 */
+        @media (prefers-color-scheme: dark) {
+            .leaflet-popup-content {
+                background: #333 !important;
+                color: #fff !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍽️ 삿포로 맛집 가이드</h1>
+            <h3>파란 버튼 클릭 시 이동</h3>
+        </div>
+        
+        <div class="navigation-tabs">
+            <a href="#okonomiyaki" class="nav-tab">🥞 오코노미야끼</a>
+            <a href="#ramen" class="nav-tab">🍜 라멘</a>
+            <a href="#takoyaki" class="nav-tab">🐙 타코야키</a>
+            <a href="#map" class="nav-tab">🗺️ 지도</a>
+        </div>
+        
+        <div class="content" id="okonomiyaki">
+            <div class="info-section">
+                <h3>🍽️ 맛집 가이드 정보</h3>
+                <div class="info-grid">
+                    <div><span class="highlight">지역</span> 삿포로 시내 중심가 (다누키코지, 스스키노)</div>
+                    <div><span class="highlight">특이사항</span> 그림 클릭 시 구글 맵 해당 주소로 이동</div>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+
+            <div class="category">
+                <h2><span class="emoji">🥞</span>오코노미야끼</h2>
+                
+                <div class="restaurant">
+                    <h3><a href="https://maps.google.com/?q=43.0572386,141.352677" target="_blank">히나짱 (ひなちゃん)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">히로시마풍 오코노미야끼 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">삿포로에서 가장 유명한 오코노미야끼 맛집, 현지인과 관광객이 줄을 서는 곳</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">다누키코지 상점가 내 (6 Chome-9 Minami 3 Jonishi, Chuo Ward)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">추천메뉴</span>
+                            <span class="detail-value">우동 버전, 소바면 버전 (둘 다 시키는 것을 추천)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:30-21:30 (마감 전 입장 제한 있음)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2><span class="emoji">🍜</span>라멘</h2>
+                
+                <div class="restaurant">
+                    <h3><a href="https://maps.google.com/?q=43.0580,141.3540" target="_blank">만류라멘 (万龍らーめん)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">삿포로 미소라멘 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">삿포로 라멘의 전통을 지키면서 독자적인 맛을 추구하는 인기 라멘집</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 지역</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">추천메뉴</span>
+                            <span class="detail-value">미소라멘, 차슈멘</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <h3><a href="https://maps.google.com/?q=43.0555,141.3535" target="_blank">하루카 (はるか)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">스스키노 라멘골목 내 라멘전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">원조 삿포로 라멘 요코초(라멘골목) 17개 가게 중 하나</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 라멘골목 (원조 삿포로 라멘 요코초)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">추천메뉴</span>
+                            <span class="detail-value">삿포로 미소라멘, 매운 미소라멘</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">심야까지 영업 (가게별 상이)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2><span class="emoji">🐙</span>타코야키</h2>
+                
+                <div class="restaurant">
+                    <h3><a href="https://maps.google.com/?q=43.0524,141.3541" target="_blank">긴다코 삿포로 스스키노점 (築地銀だこ)</a></h3>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">타코야키 전문 프랜차이즈</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">겉은 바삭하면서 속은 촉촉한 타코야키로 유명한 일본 대표 타코야키 체인점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 지역 (3-11-2 Minami 5 Jo Nishi, Chuo-ku)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">추천메뉴</span>
+                            <span class="detail-value">오리지널 타코야키, 치즈 타코야키</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:30-익일 04:00 (현금 결제만 가능)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        // 지도 초기화
+        const map = L.map('map').setView([43.0550, 141.3540], 15);
+        
+        // OpenStreetMap 타일 레이어 추가 (모바일 호환성 개선)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18,
+            tileSize: 256,
+            zoomOffset: 0
+        }).addTo(map);
+        
+        // 모바일에서 지도 터치 문제 해결
+        map.on('focus', function() { map.scrollWheelZoom.disable(); });
+        map.on('blur', function() { map.scrollWheelZoom.enable(); });
+
+        // 커스텀 마커 아이콘 생성 함수
+        function createCustomIcon(emoji) {
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid #ff6b6b;">${emoji}</div>`,
+                iconSize: [35, 35],
+                iconAnchor: [17, 17]
+            });
+        }
+
+        // 맛집 마커들
+        const restaurants = [
+            {
+                name: '히나짱',
+                coords: [43.0567223, 141.3494004],
+                emoji: '🥞',
+                popup: '<b>🥞 히나짱 (ひなちゃん)</b><br>히로시마풍 오코노미야끼 전문점<br>다누키코지 상점가 내<br><a href="https://maps.google.com/?q=43.0567223,141.3494004" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            },
+            {
+                name: '만류라멘',
+                coords: [43.0533934, 141.3540801],
+                emoji: '🍜',
+                popup: '<b>🍜 만류라멘 (万龍らーめん)</b><br>삿포로 미소라멘 전문점<br>스스키노 지역<br><a href="https://maps.google.com/?q=43.0533934,141.3540801" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            },
+            {
+                name: '하루카',
+                coords: [43.0549506, 141.3542979],
+                emoji: '🍲',
+                popup: '<b>🍲 하루카 (はるか)</b><br>스스키노 라멘골목 내<br>원조 삿포로 라멘 요코초<br><a href="https://maps.google.com/?q=43.0549506,141.3542979" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            },
+            {
+                name: '긴다코',
+                coords: [43.0548724, 141.353751],
+                emoji: '🐙',
+                popup: '<b>🐙 쓰키치 긴타코 (築地銀だこ)</b><br>타코야키 전문 프랜차이즈<br>스스키노 지역<br><a href="https://maps.google.com/?q=43.0548724,141.353751" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            }
+        ];
+
+        // 맛집 마커들 추가
+        restaurants.forEach(restaurant => {
+            const marker = L.marker(restaurant.coords, {
+                icon: createCustomIcon(restaurant.emoji)
+            }).addTo(map);
+            marker.bindPopup(restaurant.popup);
+        });
+
+        // 스무스 탭 스크롤링
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
