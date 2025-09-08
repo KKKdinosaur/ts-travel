@@ -6,6 +6,20 @@
     <title>삿포로 맛집 가이드</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --header-gradient: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1);
+            --card-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            --button-gradient: linear-gradient(135deg, #74b9ff, #0984e3);
+            --info-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --accent-color: #ff6b6b;
+            --secondary-color: #feca57;
+            --text-color: #333;
+            --light-text: #666;
+            --border-radius: 15px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -15,8 +29,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
             line-height: 1.5;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-color);
+            background: var(--primary-gradient);
             min-height: 100vh;
             padding: 10px;
             font-size: 16px;
@@ -27,13 +41,13 @@
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             overflow: hidden;
         }
         
         .header {
-            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background: var(--header-gradient);
             color: white;
             padding: 30px 20px;
             text-align: center;
@@ -57,19 +71,20 @@
             50% { transform: translateY(-20px) rotate(180deg); }
         }
         
-        .header h1 {
-            font-size: 2.2em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        .header h1, .header h3 {
             z-index: 1;
             position: relative;
         }
         
-        .header .subtitle {
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header h3 {
             font-size: 1.1em;
             opacity: 0.9;
-            z-index: 1;
-            position: relative;
         }
         
         .navigation-tabs {
@@ -81,7 +96,7 @@
         }
         
         .nav-tab {
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            background: var(--button-gradient);
             color: white;
             padding: 12px 16px;
             border-radius: 20px;
@@ -95,6 +110,7 @@
             align-items: center;
             justify-content: center;
             min-height: 45px;
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
         }
         
         .nav-tab:hover, .nav-tab:active {
@@ -108,7 +124,7 @@
         }
         
         .info-section {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            background: var(--info-gradient);
             padding: 20px 15px;
             border-radius: 12px;
             margin-bottom: 25px;
@@ -121,22 +137,6 @@
             color: #2d3436;
         }
         
-        .info-section a {
-            color: #2d3436;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 2px 6px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            font-size: 0.9em;
-            word-break: break-all;
-        }
-        
-        .info-section a:hover, .info-section a:active {
-            background: rgba(255, 255, 255, 1);
-            transform: scale(1.02);
-        }
-        
         .info-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -144,9 +144,18 @@
             margin-top: 15px;
         }
         
+        .highlight {
+            background: linear-gradient(135deg, #ff7675, #fd79a8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
         .map-container {
             margin: 25px 0;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             height: 350px;
@@ -161,33 +170,39 @@
         .category {
             margin-bottom: 30px;
             background: white;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             padding: 20px 15px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #ff6b6b;
+            border-left: 4px solid var(--accent-color);
         }
         
         .category h2 {
-            color: #ff6b6b;
+            color: var(--accent-color);
             font-size: 1.6em;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #feca57;
+            border-bottom: 2px solid var(--secondary-color);
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .restaurant, .tourist-spot, .activity-item, .tourist-item {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 5px;
+        }
+        
+        .restaurant {
+            background: var(--card-gradient);
             margin-bottom: 20px;
             padding: 18px 15px;
             border-radius: 12px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             border-left: 3px solid #20bf6b;
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
         }
         
-        .restaurant h3, .tourist-spot h3, .activity-item h4, .tourist-item h4 {
+        .restaurant h3 {
             color: #2c3e50;
             font-size: 1.2em;
             margin-bottom: 12px;
@@ -197,26 +212,26 @@
             line-height: 1.3;
         }
         
-        .restaurant h3 a, .tourist-spot h3 a {
+        .restaurant h3 a {
             color: #2c3e50;
             text-decoration: none;
             word-break: break-all;
             font-size: 1em;
         }
         
-        .restaurant h3 a:hover, .tourist-spot h3 a:hover,
-        .restaurant h3 a:active, .tourist-spot h3 a:active {
-            color: #ff6b6b;
+        .restaurant h3 a:hover,
+        .restaurant h3 a:active {
+            color: var(--accent-color);
         }
         
-        .restaurant h3 a::after, .tourist-spot h3 a::after {
+        .restaurant h3 a::after {
             content: '🔗';
             margin-left: 5px;
             opacity: 0.7;
             font-size: 0.8em;
         }
         
-        .restaurant-details, .spot-details {
+        .restaurant-details {
             display: grid;
             gap: 8px;
         }
@@ -230,7 +245,7 @@
         .detail-label {
             font-weight: bold;
             color: white;
-            background: #feca57;
+            background: var(--secondary-color);
             padding: 4px 8px;
             border-radius: 15px;
             font-size: 0.85em;
@@ -240,61 +255,36 @@
         }
         
         .detail-value {
-            color: #666;
+            color: var(--light-text);
             font-size: 0.9em;
             line-height: 1.4;
         }
         
-        .emoji {
-            font-size: 1.3em;
-            margin-right: 5px;
-        }
-        
-        .highlight {
-            background: linear-gradient(135deg, #ff7675, #fd79a8);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 0.85em;
-            font-weight: bold;
-        }
-        
+        /* Leaflet 커스터마이징 */
         .leaflet-popup-content {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            font-family: inherit;
             font-size: 13px;
             line-height: 1.4;
         }
         
         .leaflet-popup-content a {
-            color: #ff6b6b;
+            color: var(--accent-color);
             text-decoration: none;
             font-weight: bold;
         }
         
-        .leaflet-popup-content a:hover, .leaflet-popup-content a:active {
+        .leaflet-popup-content a:hover {
             text-decoration: underline;
-        }
-        
-        .leaflet-container {
-            font-size: 14px;
-        }
-        
-        .leaflet-control-zoom {
-            font-size: 18px;
         }
         
         .leaflet-control-zoom a {
             width: 30px;
             height: 30px;
             line-height: 30px;
+            font-size: 18px;
         }
         
-        /* 터치 최적화 */
-        .nav-tab, .restaurant, .tourist-spot, .activity-item, .tourist-item {
-            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
-        }
-        
-        /* 스크롤바 스타일링 (Webkit 기반 브라우저) */
+        /* 스크롤바 */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -308,7 +298,7 @@
             border-radius: 3px;
         }
         
-        /* 더 큰 폰트 크기를 위한 미디어 쿼리 */
+        /* 반응형 */
         @media (max-width: 480px) {
             body {
                 font-size: 15px;
@@ -334,7 +324,7 @@
                 font-size: 1.4em;
             }
             
-            .restaurant h3, .tourist-spot h3, .activity-item h4, .tourist-item h4 {
+            .restaurant h3 {
                 font-size: 1.1em;
             }
             
@@ -343,7 +333,7 @@
             }
         }
         
-        /* 접근성 개선 */
+        /* 접근성 */
         @media (prefers-reduced-motion: reduce) {
             * {
                 animation-duration: 0.01ms !important;
@@ -352,7 +342,6 @@
             }
         }
         
-        /* 다크모드 지원 */
         @media (prefers-color-scheme: dark) {
             .leaflet-popup-content {
                 background: #333 !important;
@@ -368,14 +357,14 @@
             <h3>파란 버튼 클릭 시 이동</h3>
         </div>
         
-        <div class="navigation-tabs">
+        <nav class="navigation-tabs">
             <a href="#okonomiyaki" class="nav-tab">🥞 오코노미야끼</a>
             <a href="#ramen" class="nav-tab">🍜 라멘</a>
             <a href="#takoyaki" class="nav-tab">🐙 타코야키</a>
             <a href="#map" class="nav-tab">🗺️ 지도</a>
-        </div>
+        </nav>
         
-        <div class="content" id="okonomiyaki">
+        <main class="content" id="okonomiyaki">
             <div class="info-section">
                 <h3>🍽️ 맛집 가이드 정보</h3>
                 <div class="info-grid">
@@ -388,10 +377,10 @@
                 <div id="map"></div>
             </div>
 
-            <div class="category">
+            <section class="category">
                 <h2><span class="emoji">🥞</span>오코노미야끼</h2>
                 
-                <div class="restaurant">
+                <article class="restaurant">
                     <h3><a href="" target="_blank">히나짱 (ひなちゃん)</a></h3>
                     <div class="restaurant-details">
                         <div class="detail-item">
@@ -415,13 +404,13 @@
                             <span class="detail-value">11:30-21:30 (마감 전 입장 제한 있음)</span>
                         </div>
                     </div>
-                </div>
-            </div>
+                </article>
+            </section>
             
-            <div class="category">
+            <section class="category">
                 <h2><span class="emoji">🍜</span>라멘</h2>
                 
-                <div class="restaurant">
+                <article class="restaurant">
                     <h3><a href="" target="_blank">만류라멘 (万龍らーめん)</a></h3>
                     <div class="restaurant-details">
                         <div class="detail-item">
@@ -441,9 +430,9 @@
                             <span class="detail-value">미소라멘, 차슈멘</span>
                         </div>
                     </div>
-                </div>
+                </article>
                 
-                <div class="restaurant">
+                <article class="restaurant">
                     <h3><a href="" target="_blank">하루카 (はるか)</a></h3>
                     <div class="restaurant-details">
                         <div class="detail-item">
@@ -467,13 +456,13 @@
                             <span class="detail-value">심야까지 영업 (가게별 상이)</span>
                         </div>
                     </div>
-                </div>
-            </div>
+                </article>
+            </section>
             
-            <div class="category">
+            <section class="category">
                 <h2><span class="emoji">🐙</span>타코야키</h2>
                 
-                <div class="restaurant">
+                <article class="restaurant">
                     <h3><a href="" target="_blank">긴다코 삿포로 스스키노점 (築地銀だこ)</a></h3>
                     <div class="restaurant-details">
                         <div class="detail-item">
@@ -497,39 +486,14 @@
                             <span class="detail-value">11:30-익일 04:00 (현금 결제만 가능)</span>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </article>
+            </section>
+        </main>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
-        // 지도 초기화
-        const map = L.map('map').setView([43.0550, 141.3540], 15);
-        
-        // OpenStreetMap 타일 레이어 추가 (모바일 호환성 개선)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 18,
-            tileSize: 256,
-            zoomOffset: 0
-        }).addTo(map);
-        
-        // 모바일에서 지도 터치 문제 해결
-        map.on('focus', function() { map.scrollWheelZoom.disable(); });
-        map.on('blur', function() { map.scrollWheelZoom.enable(); });
-
-        // 커스텀 마커 아이콘 생성 함수
-        function createCustomIcon(emoji) {
-            return L.divIcon({
-                className: 'custom-div-icon',
-                html: `<div style="background: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid #ff6b6b;">${emoji}</div>`,
-                iconSize: [35, 35],
-                iconAnchor: [17, 17]
-            });
-        }
-
-        // 맛집 마커들
-        const restaurants = [
+        const RESTAURANTS_DATA = [
             {
                 name: '히나짱',
                 coords: [43.0567223, 141.3494004],
@@ -556,27 +520,81 @@
             }
         ];
 
-        // 맛집 마커들 추가
-        restaurants.forEach(restaurant => {
-            const marker = L.marker(restaurant.coords, {
-                icon: createCustomIcon(restaurant.emoji)
-            }).addTo(map);
-            marker.bindPopup(restaurant.popup);
-        });
+        const HOTEL_DATA = {
+            coords: [43.06448278866549, 141.35561227798462],
+            popup: '<b>🏨 몬테레이 에델호프 삿포로</b><br><a href="https://www.monterey-edelhof.jp/ko/" target="_blank">공식 웹사이트</a><br><a href="https://maps.google.com/?q=43.06448278866549,141.35561227798462" target="_blank">🗺️ 구글 지도에서 보기</a>'
+        };
 
-        // 스무스 탭 스크롤링
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const targetElement = document.getElementById(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+        function createCustomIcon(emoji) {
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid #ff6b6b;">${emoji}</div>`,
+                iconSize: [35, 35],
+                iconAnchor: [17, 17]
             });
+        }
+
+        function initializeMap() {
+            const map = L.map('map').setView([43.0595, 141.3535], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 18,
+                tileSize: 256,
+                zoomOffset: 0
+            }).addTo(map);
+            
+            map.on('focus', () => map.scrollWheelZoom.disable());
+            map.on('blur', () => map.scrollWheelZoom.enable());
+
+            return map;
+        }
+
+        function addMarkersToMap(map) {
+            const allMarkers = [];
+
+            // 숙소 마커
+            const hotelMarker = L.marker(HOTEL_DATA.coords, {
+                icon: createCustomIcon('🏨')
+            }).addTo(map);
+            hotelMarker.bindPopup(HOTEL_DATA.popup);
+            allMarkers.push(hotelMarker);
+
+            // 맛집 마커들
+            RESTAURANTS_DATA.forEach(restaurant => {
+                const marker = L.marker(restaurant.coords, {
+                    icon: createCustomIcon(restaurant.emoji)
+                }).addTo(map);
+                marker.bindPopup(restaurant.popup);
+                allMarkers.push(marker);
+            });
+
+            // 모든 마커가 보이도록 지도 범위 자동 조정
+            const group = new L.featureGroup(allMarkers);
+            map.fitBounds(group.getBounds().pad(0.1));
+        }
+
+        function setupNavigation() {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            const map = initializeMap();
+            addMarkersToMap(map);
+            setupNavigation();
         });
     </script>
 </body>
