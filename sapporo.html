@@ -761,10 +761,6 @@
                                 <span class="detail-label">추천메뉴</span>
                                 <span class="detail-value">오리지널 타코야키, 치즈 타코야키</span>
                             </div>
-                            <div class="detail-item">
-                                <span class="detail-label">영업시간</span>
-                                <span class="detail-value">11:30-익일 04:00 (현금 결제만 가능)</span>
-                            </div>
                         </div>
                         <div class="distance-info" id="distance-gindako">
                             <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">4분</span> (약 320m)
@@ -810,7 +806,7 @@
                 coords: [43.0549506, 141.3542979],
                 emoji: '🍲',
                 popup: '<b>🍲 하루카 (はるか)</b><br>스스키노 라멘골목 내<br>원조 삿포로 라멘 요코이초<br><a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0549506,141.3542979&dirflg=w" target="_blank">🗺️ 숙소에서 길찾기</a>',
-                hours: { open: 18, close: 3 },
+                hours: { open: 18, close: 27 },
                 walkingTime: 5,
                 distance: 400
             },
@@ -865,8 +861,20 @@
             let text = '영업종료';
             
             if (isOpen) {
-                const closeTime = hours.close > 24 ? hours.close - 24 : hours.close;
-                const timeToClose = closeTime - currentHour;
+                let closeTime;
+                let timeToClose;
+                
+                if (hours.close > 24) {
+                    closeTime = hours.close - 24;
+                    if (currentHour >= hours.open) {
+                        timeToClose = 24 - currentHour + closeTime;
+                    } else {
+                        timeToClose = closeTime - currentHour;
+                    }
+                } else {
+                    closeTime = hours.close;
+                    timeToClose = closeTime - currentHour;
+                }
                 
                 if (timeToClose <= 1 && timeToClose > 0) {
                     status = 'closing';
@@ -882,17 +890,61 @@
 
         // 영업상태 업데이트
         function updateBusinessStatus() {
-            RESTAURANTS_DATA.forEach(restaurant => {
-                if (restaurant.hours) {
-                    const statusInfo = getBusinessStatus(restaurant.hours);
-                    const statusElement = document.getElementById(`status-${restaurant.name.toLowerCase().replace(/[^a-z]/g, '')}`);
-                    
-                    if (statusElement) {
-                        statusElement.className = `status-indicator status-${statusInfo.status}`;
-                        statusElement.querySelector('span').textContent = statusInfo.text;
-                    }
+            const now = new Date();
+            const currentHour = now.getHours() + now.getMinutes() / 60;
+            
+            // 히나짱 (11:30-21:30)
+            const hinachan = document.getElementById('status-hinachan');
+            if (hinachan) {
+                if (currentHour >= 11.5 && currentHour <= 21.5) {
+                    hinachan.className = 'status-indicator status-open';
+                    hinachan.querySelector('span').textContent = '영업중';
+                } else {
+                    hinachan.className = 'status-indicator status-closed';
+                    hinachan.querySelector('span').textContent = '영업종료';
                 }
-            });
+            }
+            
+            // 만류라멘 (11:00-23:00)
+            const manryu = document.getElementById('status-manryu');
+            if (manryu) {
+                if (currentHour >= 11 && currentHour <= 23) {
+                    if (currentHour > 22) {
+                        manryu.className = 'status-indicator status-closing';
+                        manryu.querySelector('span').textContent = '곧 마감';
+                    } else {
+                        manryu.className = 'status-indicator status-open';
+                        manryu.querySelector('span').textContent = '영업중';
+                    }
+                } else {
+                    manryu.className = 'status-indicator status-closed';
+                    manryu.querySelector('span').textContent = '영업종료';
+                }
+            }
+            
+            // 하루카 (18:00-03:00)
+            const haruka = document.getElementById('status-haruka');
+            if (haruka) {
+                if (currentHour >= 18 || currentHour <= 3) {
+                    haruka.className = 'status-indicator status-open';
+                    haruka.querySelector('span').textContent = '영업중';
+                } else {
+                    haruka.className = 'status-indicator status-closed';
+                    haruka.querySelector('span').textContent = '영업종료';
+                }
+            }
+            
+            // 긴다코 (11:30-04:00)
+            const gindako = document.getElementById('status-gindako');
+            if (gindako) {
+                if (currentHour >= 11.5 || currentHour <= 4) {
+                    gindako.className = 'status-indicator status-open';
+                    gindako.querySelector('span').textContent = '영업중';
+                } else {
+                    gindako.className = 'status-indicator status-closed';
+                    gindako.querySelector('span').textContent = '영업종료';
+                }
+            }
         }
 
         // 커스텀 아이콘 생성
