@@ -22,6 +22,48 @@
             font-size: 16px;
         }
         
+.flight-details {
+    border: none;
+}
+
+.flight-title {
+    font-size: 1.6em;
+    margin-bottom: 25px;
+    color: #1976d2;
+    text-align: center;
+    padding: 15px 20px;
+    border-radius: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;
+    background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.flight-title:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.flight-title::after {
+    content: '▶';
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+}
+
+.flight-details[open] .flight-title::after {
+    transform: rotate(90deg);
+}
+
+.flight-content {
+    margin-top: 10px;
+}
+
         .container {
             max-width: 100%;
             margin: 0 auto;
@@ -205,6 +247,97 @@
             gap: 12px;
             margin-top: 15px;
         }
+
+.team-section {
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #74b9ff;
+    overflow: hidden;
+}
+
+.team-details {
+    border: none;
+}
+
+.team-title {
+    font-size: 1.4em;
+    margin: 0;
+    padding: 18px 20px;
+    border-radius: 0;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.team-title:hover {
+    transform: none;
+    background: linear-gradient(135deg, #0984e3 0%, #74b9ff 100%);
+}
+
+.team-title::after {
+    content: '▶';
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+}
+
+.team-details[open] .team-title::after {
+    transform: rotate(90deg);
+}
+
+.team-section:nth-child(2) .team-title {
+    background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+    border-left-color: #fdcb6e;
+}
+
+.team-section:nth-child(2) {
+    border-left-color: #fdcb6e;
+}
+
+.team-section:nth-child(3) .team-title {
+    background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+    border-left-color: #00b894;
+}
+
+.team-section:nth-child(3) {
+    border-left-color: #00b894;
+}
+
+.team-section:nth-child(2) .team-ti
+
+.day-card.team-1 { border-left-color: #74b9ff; }
+.day-card.team-2 { border-left-color: #fdcb6e; }
+.day-card.team-3 { border-left-color: #00b894; }
+
+.highlight-text {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 5px 0;
+    border-left: 3px solid #e17055;
+}
+
+.note {
+    color: #e17055;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.hotel-info {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
 	/* 항공편 정보 섹션 스타일 */
 .flight-info-section {
     background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
@@ -883,144 +1016,27 @@
         </div>
         
         <div class="navigation-tabs">
-            <a href="#overview" class="nav-tab">🗓️ 일정 개요</a>
+            <a href="#flight-info" class="nav-tab">✈️ 항공편 정보</a>
+            <a href="#overview" class="nav-tab">📅 일정 개요</a>
             <a href="#toya" class="nav-tab">🌊 도야</a>
             <a href="#sapporo" class="nav-tab">🗻 삿포로</a>
+            <a href="#map" class="nav-tab">🚌 인기 관광지</a>
             <a href="#map" class="nav-tab">🗺️ 지도</a>
+
         </div>
 	
-<div class="flight-info-section">
-    <h3>✈️ 항공편 및 수하물 정보</h3>
-    
-    <!-- 항공편 기본 정보 -->
-    <div class="flight-basic-info">
-        <div class="flight-detail">
-            <span class="detail-label">항공편</span>
-            <span class="detail-value">대한항공 (KE765편)</span>
-        </div>
-        <div class="flight-detail">
-            <span class="detail-label">미팅장소</span>
-            <span class="detail-value">인천국제공항 제2터미널 3층 출국장 B 와 C 사이</span>
-        </div>
-    </div>
-
-    <!-- 미팅 일정 -->
-    <div class="meeting-schedule">
-        <h4>📅 미팅 일정</h4>
-        <div class="schedule-list">
-            <div class="schedule-item">
-                <span class="schedule-date">1차</span>
-                <span class="schedule-time">10월15일 (수) 10:00 집결</span>
-            </div>
-            <div class="schedule-item">
-                <span class="schedule-date">2차</span>
-                <span class="schedule-time">10월22일 (수) 10:00 집결</span>
-            </div>
-            <div class="schedule-item">
-                <span class="schedule-date">3차</span>
-                <span class="schedule-time">10월29일 (수) 07:30 집결</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 담당자 연락처 -->
-    <div class="contact-info">
-        <h4>📞 담당자 연락처</h4>
-        <div class="contact-list">
-            <div class="contact-item">
-                <span class="contact-name">이준성 대표</span>
-                <span class="contact-phone">010-8778-7956</span>
-            </div>
-            <div class="contact-item">
-                <span class="contact-name">이호근 부장</span>
-                <span class="contact-phone">010-5379-1659</span>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 수하물 안내 -->
-    <div class="baggage-info">
-        <h4>📝 수하물 안내사항</h4>
-        <div class="baggage-rules">
-            <div class="rule-item">
-                <span class="rule-number">1)</span>
-                <span class="rule-text">수하물 수송은 개별적으로 진행됩니다.</span>
-            </div>
-            <div class="rule-item">
-                <span class="rule-number">2)</span>
-                <span class="rule-text">기내 반입 물품 규제 - "액체류, 가루, 칼, 스프레이" 등은 위험 수하물 (부치는 짐)로 분류해야 합니다.</span>
-            </div>
-            <div class="rule-item">
-                <span class="rule-number">3)</span>
-                <div class="rule-text">
-                    <div><strong>개인별 위탁 무료 수하물:</strong> 23kg 1개, 세 변의 합 158cm 이내</div>
-                    <div><strong>기내 수하물:</strong> 10kg 1개, 세 변의 합이 115cm 이내</div>
-                    <div><strong>크기 제한:</strong> 높이(A) 55cm, 가로(B) 40cm, 세로(C) 20cm</div>
-                </div>
-            </div>
-            <div class="rule-item">
-                <span class="rule-number">4)</span>
-                <span class="rule-text">추가 허용 물품 - 노트북 컴퓨터, 서류가방, 핸드백 중 1개</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 중요 안내사항 -->
-    <div class="important-notice">
-        <h4>🚨 중요 안내사항</h4>
-        <div class="notice-content">
-            <div class="notice-item">
-                <span class="bullet">•</span>
-                <span>기내 반입 물품을 소지하고 입국 시 세관에서 100% 직접 검사하므로 각별한 주의 요망</span>
-            </div>
-            <div class="notice-item">
-                <span class="bullet">•</span>
-                <span>단, 병원에서 발급한 처방전이 있는 약은 가능</span>
-            </div>
-            <div class="tip-item">
-                <span class="tip-label">TIP!</span>
-                <span>100ml 이상의 액체류와 젤류는 기내 반입이 불가하므로 수하물에 넣어야 합니다.</span>
-            </div>
-            <div class="tip-item">
-                <span class="tip-label">TIP!</span>
-                <span>1회용 라이터, 전자담배, 보조배터리는 가지고 타셔야 합니다.</span>
-            </div>
-            <div class="tip-item">
-                <span class="tip-label">TIP!</span>
-                <span>수하물 보관표(Baggage Claim Tag)는 짐을 찾아 출국할 때까지 잘 보관합니다.</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 면세 한도 안내 -->
-    <div class="duty-free-info">
-        <h4>💧 면세 한도 안내</h4>
-        <div class="duty-content">
-            <div class="duty-item">
-                <span class="bullet">•</span>
-                <span><strong>술:</strong> 2병 (2L, 400달러 이하) - 합계 용량과 가격이 면세 한도를 넘으면 세금 부과</span>
-            </div>
-            <div class="duty-item">
-                <span class="bullet">•</span>
-                <span><strong>담배:</strong> 200개비(10갑), 전자담배는 니코틴 용액이 20mL 이하</span>
-            </div>
-            <div class="duty-item">
-                <span class="bullet">•</span>
-                <span><strong>향수:</strong> 60mL 이하일 경우 세금 면제</span>
-            </div>
-            <div class="duty-item">
-                <span class="bullet">•</span>
-                <span><strong>US$800 초과:</strong> 구입한 물품은 입국 시 관세 부과 가능, 초과 시 세관 신고 필수</span>
-            </div>
-        </div>
-    </div>
 
 
 <div class="itinerary-overview" id="overview">
-            <h2>📅 여행 일정 개요</h2>
+    <h2>📅 여행 일정 개요</h2>
+    
+    <!-- 1, 2차 팀 -->
+<div class="team-section">
+    <details class="team-details">
+        <summary class="team-title">🟦1, 2차 팀 10:00시 집결</summary>
             <div class="day-schedule">
-                <div class="day-card">
-                    <h3>🛫 1일차 (인천 → 도야)</h3>
+                <div class="day-card team-1">
+                    <h4>🛫 1일차 (인천 → 도야)</h4>
                     <div class="location">인천공항 → 신치토세 → 도야호</div>
                     <p><strong>10:00:</strong> 인천공항 제2터미널 집결</p>
                     <p><strong>12:35:</strong> 인천 출발 (KE765)</p>
@@ -1030,8 +1046,8 @@
                     <p><strong>18:00:</strong> 석식 (호텔 뷔페) 및 온천 휴식</p>
                 </div>
                 
-                <div class="day-card">
-                    <h3>🌄 2일차 (도야 → 삿포로)</h3>
+                <div class="day-card team-1">
+                    <h4>🌄 2일차 (도야 → 삿포로)</h4>
                     <div class="location">도야호 관광 → 노보리베츠 → 삿포로</div>
                     <p><strong>오전:</strong> 호텔 조식 후 체크아웃</p>
                     <p><strong>관광:</strong> 도야호 유람선, 쇼와신산 & 우스산 로프웨이</p>
@@ -1041,8 +1057,8 @@
                     <p><strong>석식:</strong> 삿포로 맥주박물관 견학 및 시음</p>
                 </div>
                 
-                <div class="day-card">
-                    <h3>🏙️ 3일차 (삿포로 → 오타루 → 삿포로)</h3>
+                <div class="day-card team-1">
+                    <h4>🏙️ 3일차 (삿포로 → 오타루 → 삿포로)</h4>
                     <div class="location">오타루 관광 후 삿포로 자유시간</div>
                     <p><strong>오전:</strong> 호텔 조식 후 오타루 이동</p>
                     <p><strong>관광:</strong> 오타루 운하, 기타이치 유리공예관, 오르골 전시관</p>
@@ -1051,8 +1067,8 @@
                     <p><strong>저녁:</strong> 호텔 투숙 및 휴식</p>
                 </div>
                 
-                <div class="day-card">
-                    <h3>🛫 4일차 (삿포로 → 인천)</h3>
+                <div class="day-card team-1">
+                    <h4>🛫 4일차 (삿포로 → 인천)</h4>
                     <div class="location">삿포로 → 신치토세 → 인천공항</div>
                     <p><strong>07:00:</strong> 호텔 조식</p>
                     <p><strong>09:50:</strong> 체크아웃 후 가이드 미팅</p>
@@ -1062,7 +1078,53 @@
                     <p><strong>16:20:</strong> 신치토세 출발 (KE766) → 19:30 인천 도착</p>
                 </div>
             </div>
-        </div>
+        </details>
+    </div>
+
+    <!-- 3차 팀 -->
+    <div class="team-section">
+        <details class="team-details">
+            <summary class="team-title">🟩 3차 팀 07:30 집결</summary>
+            <div class="day-schedule">
+                <div class="day-card team-3">
+                    <h4>🛫 1일차 (인천 → 도야)</h4>
+                    <div class="location">인천공항 → 신치토세 → 노보리베츠 → 도야호</div>
+                    <p><strong>07:30:</strong> 인천공항 제2터미널 3층 출국장 B와 C 사이 집결</p>
+                    <p><strong>10:05:</strong> 인천 국제공항 출발 (24시간 45분 소요)</p>
+                    <p><strong>12:45:</strong> 신치토세 국제공항 도착</p>
+                    <p><strong>13:30:</strong> 입국 수속 후 전용차량 탑승</p>
+                    <p class="highlight-text">노보리베츠로 이동 (1시간 소요) - 노보리베츠 도착 후 중식, 지옥계곡 관광</p>
+                    <p class="highlight-text">도야 호수로 이동 (1시간 소요)</p>
+                    <p><strong>18:00:</strong> 도야 도착 후 호텔 체크인 및 투숙</p>
+                    <p><strong>석식:</strong> (호텔 뷔페) <span class="note">석식 이용 시간은 1시간 30분 제한</span></p>
+                    <p class="hotel-info"><strong>HOTEL:</strong> 도야호 만세각 호텔 레이크 사이드</p>
+                </div>
+                
+                <div class="day-card team-3">
+                    <h4>🌄 2일차 (도야 → 삿포로)</h4>
+                    <div class="location">도야호 관광 → 삿포로</div>
+                    <p><strong>오전:</strong> 호텔 조식, 가이드 미팅 후 체크아웃</p>
+                    <p><strong>도야 관광:</strong> 도야 호수 유람선, 쇼와신산 & 우스산 로프웨이</p>
+                    <p><strong>중식:</strong> 해산물 철판구이</p>
+                    <p><strong>18:00:</strong> 삿포로 도착 후 관광 - 삿포로 맥주박물관 견학 및 생맥주 시음</p>
+                    <p><strong>석식:</strong> (자유식)</p>
+                    <p class="hotel-info"><strong>HOTEL:</strong> 몬테레이 에델호프 삿포로 호텔</p>
+                </div>
+                
+                <div class="day-card team-3">
+                    <h4>🛫 3일차 (삿포로 → 인천)</h4>
+                    <div class="location">삿포로 → 신치토세 → 인천공항</div>
+                    <p><strong>07:00:</strong> 호텔 조식</p>
+                    <p><strong>10:00:</strong> 가이드 미팅 후 체크아웃</p>
+                    <p><strong>10:30:</strong> 신치토세 국제공항으로 이동</p>
+                    <p><strong>11:30:</strong> 공항 도착 후 출국수속</p>
+                    <p><strong>14:00:</strong> 신치토세 국제공항 출발 (3시간 05분 소요)</p>
+                    <p><strong>17:05:</strong> 인천 국제공항 도착</p>
+                </div>
+            </div>
+        </details>
+    </div>
+</div>
         
         <div class="content" id="toya">
             <div class="info-section">
@@ -1227,7 +1289,7 @@
             </div>
 
             <div class="tourist-section">
-                <h2><span class="emoji">🏛️</span>숙소 근처 인기 관광지</h2>
+                <h2><span class="emoji">🚌</span>숙소 근처 인기 관광지</h2>
                
                 <div class="tourist-item">
                     <div class="restaurant-header">
@@ -2059,7 +2121,138 @@
                 </div>
             </div>
         </div>
+<div class="flight-info-section" id="flight-info">
+    <details class="flight-details">
+        <summary class="flight-title">✈️ 항공편 및 수하물 정보</summary>
+        <div class="flight-content">
+            <!-- 항공편 기본 정보 -->
+            <div class="flight-basic-info">
+                <div class="flight-detail">
+                    <span class="detail-label">항공편</span>
+                    <span class="detail-value">대한항공 (KE765편)</span>
+                </div>
+                <div class="flight-detail">
+                    <span class="detail-label">미팅장소</span>
+                    <span class="detail-value">인천국제공항 제2터미널 3층 출국장 B 와 C 사이</span>
+                </div>
+            </div>
+
+            <!-- 미팅 일정 -->
+            <div class="meeting-schedule">
+                <h4>📅 미팅 일정</h4>
+                <div class="schedule-list">
+                    <div class="schedule-item">
+                        <span class="schedule-date">1차</span>
+                        <span class="schedule-time">10월15일 (수) 10:00 집결</span>
+                    </div>
+                    <div class="schedule-item">
+                        <span class="schedule-date">2차</span>
+                        <span class="schedule-time">10월22일 (수) 10:00 집결</span>
+                    </div>
+                    <div class="schedule-item">
+                        <span class="schedule-date">3차</span>
+                        <span class="schedule-time">10월29일 (수) 07:30 집결</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 담당자 연락처 -->
+            <div class="contact-info">
+                <h4>📞 담당자 연락처</h4>
+                <div class="contact-list">
+                    <div class="contact-item">
+                        <span class="contact-name">이준성 대표</span>
+                        <span class="contact-phone">010-8778-7956</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-name">이호근 부장</span>
+                        <span class="contact-phone">010-5379-1659</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 수하물 안내 -->
+            <div class="baggage-info">
+                <h4>📝 수하물 안내사항</h4>
+                <div class="baggage-rules">
+                    <div class="rule-item">
+                        <span class="rule-number">1)</span>
+                        <span class="rule-text">수하물 수송은 개별적으로 진행됩니다.</span>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-number">2)</span>
+                        <span class="rule-text">기내 반입 물품 규제 - "액체류, 가루, 칼, 스프레이" 등은 위험 수하물 (부치는 짐)로 분류해야 합니다.</span>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-number">3)</span>
+                        <div class="rule-text">
+                            <div><strong>개인별 위탁 무료 수하물:</strong> 23kg 1개, 세 변의 합 158cm 이내</div>
+                            <div><strong>기내 수하물:</strong> 10kg 1개, 세 변의 합이 115cm 이내</div>
+                            <div><strong>크기 제한:</strong> 높이(A) 55cm, 가로(B) 40cm, 세로(C) 20cm</div>
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-number">4)</span>
+                        <span class="rule-text">추가 허용 물품 - 노트북 컴퓨터, 서류가방, 핸드백 중 1개</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 중요 안내사항 -->
+            <div class="important-notice">
+                <h4>🚨 중요 안내사항</h4>
+                <div class="notice-content">
+                    <div class="notice-item">
+                        <span class="bullet">•</span>
+                        <span>기내 반입 물품을 소지하고 입국 시 세관에서 100% 직접 검사하므로 각별한 주의 요망</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="bullet">•</span>
+                        <span>단, 병원에서 발급한 처방전이 있는 약은 가능</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-label">TIP!</span>
+                        <span>100ml 이상의 액체류와 젤류는 기내 반입이 불가하므로 수하물에 넣어야 합니다.</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-label">TIP!</span>
+                        <span> 1회용 라이터, 전자담배, 보조배터리는 가지고 타셔야 합니다.</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-label">TIP!</span>
+                        <span>수하물 보관표(Baggage Claim Tag)는 짐을 찾아 출국할 때까지 잘 보관합니다.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 면세 한도 안내 -->
+            <div class="duty-free-info">
+                <h4>💧 면세 한도 안내</h4>
+                <div class="duty-content">
+                    <div class="duty-item">
+                        <span class="bullet">•</span>
+                        <span><strong>술:</strong> 2병 (2L, 400달러 이하) - 합계 용량과 가격이 면세 한도를 넘으면 세금 부과</span>
+                    </div>
+                    <div class="duty-item">
+                        <span class="bullet">•</span>
+                        <span><strong>담배:</strong> 200개비(10갑), 전자담배는 니코틴 용액이 20mL 이하</span>
+                    </div>
+                    <div class="duty-item">
+                        <span class="bullet">•</span>
+                        <span><strong>향수:</strong> 60mL 이하일 경우 세금 면제</span>
+                    </div>
+                    <div class="duty-item">
+                        <span class="bullet">•</span>
+                        <span><strong>US$800 초과:</strong> 구입한 물품은 입국 시 관세 부과 가능, 초과 시 세관 신고 필수</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </details>
+</div>
+
     </div>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
