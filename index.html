@@ -2,10 +2,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3.0">
-    <title>북해도 가이드(?)</title>
+    <title>북해도 가이드</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <style>
+<style>
+        /* CSS 변수 정의 - 여기에 추가 */
+        :root {
+            --primary-color: #74b9ff;
+            --secondary-color: #ff6b6b;
+            --accent-color: #feca57;
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --danger-color: #e84393;
+            --text-color: #333;
+            --shadow-sm: 0 3px 10px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+/* 스크린 리더 전용 클래스 - CSS 변수 다음에 추가 */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+	 /* 기존 CSS 코드 시작 */
         * {
             margin: 0;
             padding: 0;
@@ -1030,15 +1058,18 @@
 <div class="itinerary-overview" id="overview">
     <h2>📅 여행 일정 개요</h2>
     
-    <!-- 1, 2차 팀 -->
+    <!-- 1, 2차팀 -->
 <div class="team-section">
-    <details class="team-details">
-        <summary class="team-title">🟦1, 2차 팀 10:00시 집결</summary>
+<details class="team-details" role="region" aria-labelledby="team1-title">
+    <summary class="team-title" id="team1-title" tabindex="0">
+        <span class="sr-only">1, 2차팀 일정 펼치기/접기</span>
+        🟦1, 2차팀 10:00시 집결
+    </summary>
             <div class="day-schedule">
                 <div class="day-card team-1">
                     <h4>🛫 1일차 (인천 → 도야)</h4>
                     <div class="location">인천공항 → 신치토세 → 도야호</div>
-                    <p><strong>10:00:</strong> 인천공항 제2터미널 집결</p>
+                    <p><strong>10:00:</strong> 인천공항제2여객터미널3층출국장B 와C 사이집결</p>
                     <p><strong>12:35:</strong> 인천 출발 (KE765)</p>
                     <p><strong>15:20:</strong> 신치토세 도착</p>
                     <p><strong>16:20:</strong> 입국 수속 후 가이드 미팅</p>
@@ -1049,7 +1080,7 @@
                 <div class="day-card team-1">
                     <h4>🌄 2일차 (도야 → 삿포로)</h4>
                     <div class="location">도야호 관광 → 노보리베츠 → 삿포로</div>
-                    <p><strong>오전:</strong> 호텔 조식 후 체크아웃</p>
+                    <p><strong>오전:</strong> 호텔 조식 후 가이드 미팅 및 체크아웃</p>
                     <p><strong>관광:</strong> 도야호 유람선, 쇼와신산 & 우스산 로프웨이</p>
                     <p><strong>중식:</strong> 해산물 철판구이</p>
                     <p><strong>오후:</strong> 노보리베츠 지옥계곡 관광</p>
@@ -1081,44 +1112,57 @@
         </details>
     </div>
 
-    <!-- 3차 팀 -->
+<!-- 3차팀 -->
     <div class="team-section">
-        <details class="team-details">
-            <summary class="team-title">🟩 3차 팀 07:30 집결</summary>
+<details class="team-details" role="region" aria-labelledby="team3-title">
+    <summary class="team-title" id="team3-title" tabindex="0">
+        <span class="sr-only">3차팀 일정 펼치기/접기</span>
+        🟩 3차팀 07:30 집결
+    </summary>
             <div class="day-schedule">
-                <div class="day-card team-3">
+               <div class="day-card team-3">
                     <h4>🛫 1일차 (인천 → 도야)</h4>
-                    <div class="location">인천공항 → 신치토세 → 노보리베츠 → 도야호</div>
+                    <div class="location">인천공항 → 신치토세 → 노보리벳츠 → 도야호</div>
                     <p><strong>07:30:</strong> 인천공항 제2터미널 3층 출국장 B와 C 사이 집결</p>
-                    <p><strong>10:05:</strong> 인천 국제공항 출발 (24시간 45분 소요)</p>
+                    <p><strong>10:05:</strong> 인천 국제공항 출발 (KE765편)</p>
                     <p><strong>12:45:</strong> 신치토세 국제공항 도착</p>
                     <p><strong>13:30:</strong> 입국 수속 후 전용차량 탑승</p>
-                    <p class="highlight-text">노보리베츠로 이동 (1시간 소요) - 노보리베츠 도착 후 중식, 지옥계곡 관광</p>
-                    <p class="highlight-text">도야 호수로 이동 (1시간 소요)</p>
+                    <p><strong>14:30:</strong> 노보리벳츠로 이동 (1시간 소요)</p>
+                    <p><strong>15:30:</strong> 노보리벳츠 지옥계곡 관광</p>
+                    <p><strong>17:00:</strong> 도야 호수로 이동 (1시간 소요)</p>
                     <p><strong>18:00:</strong> 도야 도착 후 호텔 체크인 및 투숙</p>
-                    <p><strong>석식:</strong> (호텔 뷔페) <span class="note">석식 이용 시간은 1시간 30분 제한</span></p>
-                    <p class="hotel-info"><strong>HOTEL:</strong> 도야호 만세각 호텔 레이크 사이드</p>
+                    <p><strong>석식:</strong> 호텔 뷔페 (음료/주류 포함) <span class="note">1시간 30분 제한</span></p>
                 </div>
                 
                 <div class="day-card team-3">
                     <h4>🌄 2일차 (도야 → 삿포로)</h4>
                     <div class="location">도야호 관광 → 삿포로</div>
-                    <p><strong>오전:</strong> 호텔 조식, 가이드 미팅 후 체크아웃</p>
-                    <p><strong>도야 관광:</strong> 도야 호수 유람선, 쇼와신산 & 우스산 로프웨이</p>
-                    <p><strong>중식:</strong> 해산물 철판구이</p>
-                    <p><strong>18:00:</strong> 삿포로 도착 후 관광 - 삿포로 맥주박물관 견학 및 생맥주 시음</p>
-                    <p><strong>석식:</strong> (자유식)</p>
-                    <p class="hotel-info"><strong>HOTEL:</strong> 몬테레이 에델호프 삿포로 호텔</p>
+                    <p><strong>오전:</strong> 호텔 조식 후 체크아웃</p>
+                    <p><strong>09:00:</strong> 도야 관광 - 유람선 탑승, 쇼와신산 & 우스산 로프웨이</p>
+                    <p><strong>12:00:</strong> 중식 (해산물 철판구이)</p>
+                    <p><strong>14:00:</strong> 삿포로 이동 (2시간 소요)</p>
+                    <p><strong>16:00:</strong> 삿포로 도착 후 관광 - 맥주박물관 견학 & 시음, 북해도 신궁</p>
+                    <p><strong>18:00:</strong> 석식 (대게 + 음료/주류) <span class="note">1시간 30분 제한</span></p>
                 </div>
                 
                 <div class="day-card team-3">
-                    <h4>🛫 3일차 (삿포로 → 인천)</h4>
+                    <h4>🏙️ 3일차 (삿포로 → 오타루 → 삿포로)</h4>
+                    <div class="location">오타루 관광 후 삿포로 자유시간</div>
+                    <p><strong>오전:</strong> 호텔 조식 후 면세점 쇼핑</p>
+                    <p><strong>10:00:</strong> 오타루로 이동 (1시간 소요)</p>
+                    <p><strong>11:00:</strong> 오타루 관광 - 운하, 기타이치 유리공예관, 오르골 전시장</p>
+                    <p><strong>13:00:</strong> 중식 (자유식) + 삿포로 복귀</p>
+                    <p><strong>15:00:</strong> 삿포로 자유 관광 - 쇼핑, 음식, 시내 탐방</p>
+                    <p><strong>석식:</strong> 자유식</p>
+                </div>
+                
+                <div class="day-card team-3">
+                    <h4>🛫 4일차 (삿포로 → 인천)</h4>
                     <div class="location">삿포로 → 신치토세 → 인천공항</div>
                     <p><strong>07:00:</strong> 호텔 조식</p>
-                    <p><strong>10:00:</strong> 가이드 미팅 후 체크아웃</p>
-                    <p><strong>10:30:</strong> 신치토세 국제공항으로 이동</p>
-                    <p><strong>11:30:</strong> 공항 도착 후 출국수속</p>
-                    <p><strong>14:00:</strong> 신치토세 국제공항 출발 (3시간 05분 소요)</p>
+                    <p><strong>10:00:</strong> 체크아웃 후 신치토세 공항으로 이동</p>
+                    <p><strong>11:30:</strong> 공항 도착 후 출국 수속</p>
+                    <p><strong>14:00:</strong> 신치토세 국제공항 출발 (KE766편)</p>
                     <p><strong>17:05:</strong> 인천 국제공항 도착</p>
                 </div>
             </div>
@@ -1136,7 +1180,7 @@
             </div>
             
             <div class="category">
-                <h2><span class="emoji">🍎</span>도야 지역 특산품</h2>
+                <h2><span class="emoji">🌊</span>도야 지역 특산품</h2>
                 
                 <div class="restaurant">
                      <div class="restaurant-header">
@@ -1432,7 +1476,7 @@
             </div>
             
             <div class="category">
-                <h2><span class="emoji">🥩</span>징기스칸 (양고기 바베큐)</h2>
+                <h2><span class="emoji">🍱</span>삿포로 시내 맛집리스트</h2>
                 
                 <article class="restaurant">
                     <div class="restaurant-header">
@@ -1450,7 +1494,7 @@
                     <div class="restaurant-details">
                         <div class="detail-item">
                             <span class="detail-label">업종</span>
-                            <span class="detail-value">홋카이도 대표 징기스칸 전문점</span>
+                            <span class="detail-value">양고기 바비큐 전문점</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">특징</span>
@@ -1543,6 +1587,42 @@
                     </div>
                     <div class="distance-info" id="distance-hanamaru">
                         <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">4분</span> (약 300m)
+                    </div>
+                </div>
+
+<div class="restaurant">
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0733361,141.3697198" target="_blank">도리톤 스시 (ドリトン寿司)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-doriton">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0733361,141.3697198&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">스시 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">홋카이도 신선한 해산물로 만든 정통 스시, 현지인들이 즐겨 찾는 맛집</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로 동쪽 지역</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:30-21:30 (월요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-doriton">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">25분</span> (약 2.0km)
                     </div>
                 </div>
                 
@@ -1657,7 +1737,8 @@
                         <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">3분</span> (약 240m)
                     </div>
                 </div>
-                
+
+
                 <div class="restaurant">
                     <div class="restaurant-header">
                         <h3><a href="https://maps.google.com/?q=43.058299,141.358446" target="_blank">니조시장 돈부리차야</a></h3>
@@ -1697,7 +1778,43 @@
             
             <div class="category">
                 <h2><span class="emoji">🍖</span>야키토리/이자카야</h2>
-                
+          
+		<div class="restaurant">
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0563616,141.3519685" target="_blank">키스무혼테이 (キスム本店)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-kisumu">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0563616,141.3519685&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">야키토리/이자카야</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">삿포로 현지인들이 즐겨 찾는 이자카야, 정통 야키토리와 다양한 술안주</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 중심가</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">17:00-24:00 (화요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-kisumu">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">7분</span> (약 580m)
+                    </div>
+                </div>
+      
                 <div class="restaurant">
                     <div class="restaurant-header">
                         <h3><a href="https://maps.google.com/?q=43.0563576,141.3568789" target="_blank">야키토리 타케토라 (焼鳥竹虎)</a></h3>
@@ -1806,7 +1923,203 @@
                     </div>
                 </div>
             </div>
+
+<div class="category">
+                <h2><span class="emoji">🍤</span>텐동/튀김</h2>
+                
+                <div class="restaurant">
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0581795,141.3514813" target="_blank">에비텐 텐동 (えび天天丼)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-ebiten">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0581795,141.3514813&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">텐동/새우튀김 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">갓 튀긴 바삭한 에비텐(새우튀김)과 정통 텐동, 신선한 재료와 전통 레시피</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로 시내 중심가</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:00-21:00 (목요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-ebiten">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">6분</span> (약 480m)
+                    </div>
+                </div>
+            </div>
+
+<div class="category">
+                <h2><span class="emoji">🥞</span>오코노미야끼</h2>
+
+
+		<div class="restaurant">
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0574073,141.3510477" target="_blank">뎃파치 (でっぱち)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-deppachi">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0574073,141.3510477&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">철판요리 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">몬자야끼와 오코노미야끼가 인기인 철판요리 전문점, 다양한 철판 메뉴</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로 시내 중심가</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">17:00-24:00 (수요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-deppachi">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">9분</span> (약 720m)
+                    </div>
+                </div>
+                
+                <div class="restaurant">
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0567223,141.3494004" target="_blank">히나짱 (ひなちゃん)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-hinachan">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0567223,141.3494004&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">오코노미야끼 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">현지인들이 사랑하는 정통 오코노미야끼 맛집, 철판에서 직접 구워주는 따뜻한 분위기</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">삿포로 시내 중심가</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">17:00-23:00 (일요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-hinachan">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">8분</span> (약 650m)
+                    </div>
+                </div>
+            </div>
+
+
             
+	    <div class="category">
+                <h2><span class="emoji">🍜</span>라멘</h2>
+                
+
+				<div class="restaurant">
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0568604,141.3509988" target="_blank">요시야마쇼우텐 다누키코지점 (吉山商店)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-yoshiyama">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0568604,141.3509988&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">일본식 가정요리 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">다누키코지 상점가 내 위치, 전통 일본 가정식 요리와 친근한 분위기</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">다누키코지 상점가</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:00-20:00 (수요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-yoshiyama">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">7분</span> (약 550m)
+                    </div>
+                </div>
+                <div class="restaurant">
+                    <div class="restaurant-header">
+                        <h3><a href="https://maps.google.com/?q=43.0549506,141.3542979" target="_blank">라멘 하루카 (ラーメンはるか)</a></h3>
+                        <div class="header-actions">
+                            <div class="status-indicator status-open" id="status-haruka">
+                                <i class="fas fa-clock"></i>
+                                <span>영업중</span>
+                            </div>
+                            <a href="https://maps.google.com/?saddr=43.06448278866549,141.35561227798462&daddr=43.0549506,141.3542979&dirflg=w" target="_blank" class="directions-link">
+                                <i class="fas fa-directions"></i> 길찾기
+                            </a>
+                        </div>
+                    </div>
+                    <div class="restaurant-details">
+                        <div class="detail-item">
+                            <span class="detail-label">업종</span>
+                            <span class="detail-value">라멘 전문점</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">특징</span>
+                            <span class="detail-value">현지인들에게 인기 있는 라멘 전문점, 진한 국물과 쫄깃한 면발이 특징</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">위치</span>
+                            <span class="detail-value">스스키노 지역</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">영업시간</span>
+                            <span class="detail-value">11:00-22:00 (월요일 휴무)</span>
+                        </div>
+                    </div>
+                    <div class="distance-info" id="distance-haruka">
+                        <i class="fas fa-walking"></i> 호텔에서 도보 <span class="distance-time">6분</span> (약 500m)
+                    </div>
+                </div>
+            </div>
+	
+
             <div class="category">
                 <h2><span class="emoji">🍦</span>디저트 & 아이스크림</h2>
                 
@@ -2121,9 +2434,14 @@
                 </div>
             </div>
         </div>
+
 <div class="flight-info-section" id="flight-info">
-    <details class="flight-details">
-        <summary class="flight-title">✈️ 항공편 및 수하물 정보</summary>
+    <details class="flight-details" role="region" aria-labelledby="flight-title">
+        <summary class="flight-title" id="flight-title" tabindex="0">
+            <span class="sr-only">항공편 정보 펼치기/접기</span>
+            ✈️ 항공편 및 수하물 정보
+        </summary>
+
         <div class="flight-content">
             <!-- 항공편 기본 정보 -->
             <div class="flight-basic-info">
@@ -2385,6 +2703,42 @@
                 emoji: '🍙',
                 popup: '<b>🍙 시하치</b><br>카이센동 전문점<br>다누키코지 내 가성비 맛집<br><a href="https://maps.google.com/?q=43.0580374 , 141.3552807" target="_blank">🗺️ 구글 지도에서 보기</a>'
             },
+	    {
+                name: '히나짱',
+                coords: [43.0567223, 141.3494004],
+		emoji: '🥞',
+		popup: '<b>🥞 히나짱 (ひなちゃん)</b><br>오코노미야끼 전문점<br>정통 오코노미야끼와 따뜻한 분위기<br>기<br><a href="https://maps.google.com/?q=43.0567223,141.3494004" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            },
+	    {
+                name: '뎃파치',
+                coords: [43.0574073, 141.3510477],
+                emoji: '🔥',
+                popup: '<b>🔥 뎃파치 (でっぱち)</b><br>철판요리 전문점<br>몬자야끼와 오코노미야끼가 인기<br><a href="https://maps.google.com/?q=43.0574073,141.3510477" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            },
+	    {
+                name: '요시야마쇼우텐',
+                coords: [43.0568604, 141.3509988],
+                emoji: '🏮',
+                popup: '<b>🏮 요시야마쇼우텐 다누키코지점</b><br>일본식 가정요리 전문점<br>전통 일본 가정식 요리와 친근한 분위기<br><a href="https://maps.google.com/?q=43.0568604,141.3509988" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            },
+	    {
+                name: '라멘하루카',
+                coords: [43.0549506, 141.3542979],
+                emoji: '🍜',
+                popup: '<b>🍜 라멘하루카 (ラーメンはるか)</b><br>라멘 전문점<br>진한 국물과 쫄깃한 면발이 특징<br><a href="https://maps.google.com/?q=43.0549506,141.3542979" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            },
+	    {
+                name: '키스무혼테이',
+                coords: [43.0563616, 141.3519685],
+                emoji: '🍖',
+		popup: '<b>🍖 키스무혼테이 (キスム本店)</b><br>야키토리/이자카야<br>삿포로 현지인들이 즐겨 찾는 이자카야<br>맛집<br><a href="https://maps.google.com/?q=43.0563616,141.3519685" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            },
+	    {
+                name: '에비텐 텐동',
+                coords: [43.0581795, 141.3514813],
+                emoji: '🍤',
+                popup: '<b>🍤 에비텐 텐동 (えび天天丼)</b><br>텐동/새우튀김 전문점<br>갓 튀긴 바삭한 에비텐과 정통 텐동<br><a href="https://maps.google.com/?q=43.0581795,141.3514813" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            },
             {
                 name: '니조시장 돈부리차야',
                 coords: [43.058299 , 141.358446],
@@ -2396,6 +2750,12 @@
                 coords: [43.0617713 , 141.3544506],
                 emoji: '🦀',
                 popup: '<b>🦀 가니도라쿠 삿포로 본점</b><br>홋카이도 대표 게 요리 전문점<br>1964년 창업 고급 게 요리 맛집<br><a href="https://maps.google.com/?q=43.0617713 , 141.3544506" target="_blank">🗺️ 구글 지도에서 보기</a>'
+            },
+            {
+                name: '도리톤 스시',
+                coords: [43.0733361, 141.3697198],
+                emoji: '🍣',
+                popup: '<b>🍣 도리톤 스시 (ドリトン寿司)</b><br>스시 전문점<br>홋카이도 신선한 해산물로 만든 정통 스시<br><a href="https://maps.google.com/?q=43.0733361,141.3697198" target="_blank">🗺️ 구글 지도에서 보기</a>'
             }
         ];
 
@@ -2540,10 +2900,11 @@
             
             return { status, text };
         }
-
+		
         // 영업상태 업데이트
-        function updateBusinessStatus() {
-            const restaurants = [
+         function updateBusinessStatus() {
+            try {
+                const restaurants = [
                 // 도야 지역
                 { id: 'wakasaimo', hours: { open: 9, close: 18 } },
                 { id: 'kitkat', hours: { open: 8, close: 20 } },
@@ -2553,9 +2914,16 @@
                 { id: 'daruma', hours: { open: 17, close: 27 } }, // 17:00-03:00
                 { id: 'shibuki', hours: { open: 17, close: 23 } }, // 17:00-23:00
                 { id: 'hanamaru', hours: { open: 11, close: 22 } }, // 11:00-22:00
-                { id: 'kanidoraku', hours: { open: 11.5, close: 22 } }, // 11:30-22:00
+		{ id: 'doriton', hours: { open: 11.5, close: 21.5 } }, // 11:30-21:30
+		{ id: 'kanidoraku', hours: { open: 11.5, close: 22 } }, // 11:30-22:00
+		{ id: 'kisumu', hours: { open: 17, close: 24 } }, // 17:00-24:00
+		{ id: 'ebiten', hours: { open: 11, close: 21 } }, // 11:00-21:00
                 { id: 'butadon', hours: { open: 11, close: 20 } }, // 11:00-20:00
                 { id: 'shihachi', hours: { open: 11, close: 21 } }, // 11:00-21:00
+		{ id: 'hinachan', hours: { open: 17, close: 23 } }, // 17:00-23:00
+		{ id: 'deppachi', hours: { open: 17, close: 24 } }, // 17:00-24:00
+		{ id: 'yoshiyama', hours: { open: 11, close: 20 } }, // 11:00-20:00
+		{ id: 'haruka', hours: { open: 11, close: 22 } }, // 11:00-22:00
                 { id: 'donburichaya', hours: { open: 6, close: 14 } }, // 6:00-14:00
                 { id: 'taketora', hours: { open: 17, close: 24 } }, // 17:00-24:00
                 { id: 'sugino', hours: { open: 17, close: 23 } }, // 17:00-23:00
@@ -2569,20 +2937,23 @@
             ];
 
             restaurants.forEach(restaurant => {
-                const statusInfo = getBusinessStatus(restaurant.hours);
-                const statusElement = document.getElementById(`status-${restaurant.id}`);
+                    const statusInfo = getBusinessStatus(restaurant.hours);
+                    const statusElement = document.getElementById(`status-${restaurant.id}`);
+                    
+                    if (statusElement && statusElement.querySelector('span')) {
+                        statusElement.className = `status-indicator status-${statusInfo.status}`;
+                        statusElement.querySelector('span').textContent = statusInfo.text;
+                    }
+                });
                 
-                if (statusElement) {
-                    statusElement.className = `status-indicator status-${statusInfo.status}`;
-                    statusElement.querySelector('span').textContent = statusInfo.text;
+                // 돈키호테 처리 부분도 기존과 동일
+                const donkiElement = document.getElementById('status-donki');
+                if (donkiElement && donkiElement.querySelector('span')) {
+                    donkiElement.className = 'status-indicator status-open';
+                    donkiElement.querySelector('span').textContent = '24시간';
                 }
-            });
-            
-            // 돈키호테는 24시간이므로 별도 처리
-            const donkiElement = document.getElementById('status-donki');
-            if (donkiElement) {
-                donkiElement.className = 'status-indicator status-open';
-                donkiElement.querySelector('span').textContent = '24시간';
+            } catch (error) {
+                console.error('영업상태 업데이트 실패:', error);
             }
         }
 
@@ -2596,4 +2967,4 @@
         });
     </script>
 </body>
-</html><!DOCTYPE html>                
+</html>
