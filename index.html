@@ -49,6 +49,207 @@
             padding: 10px;
             font-size: 16px;
         }
+
+/* 로드맵 스타일 */
+.roadmap-container {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    padding: 25px 20px;
+    margin: 15px 0;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.roadmap-container h2 {
+    color: #e17055;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.team-selector {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.team-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.7);
+    color: #333;
+}
+
+.team-btn.active {
+    background: #74b9ff;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.team-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.roadmap {
+    position: relative;
+    margin: 20px 0;
+}
+
+
+.roadmap-item {
+    position: relative;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.roadmap-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+
+.day-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 15px;
+}
+
+.day-number {
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    flex-shrink: 0;
+}
+
+.day-title {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #2d3436;
+}
+
+.day-route {
+    background: #74b9ff;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.day-activities {
+    display: grid;
+    gap: 12px;
+}
+
+.activity {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #74b9ff;
+}
+
+.activity-time {
+    background: #74b9ff;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: bold;
+    color: #2d3436;
+    margin-bottom: 4px;
+}
+
+.activity-detail {
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.4;
+}
+
+.team-roadmap {
+    display: none;
+}
+
+.team-roadmap.active {
+    display: block;
+}
+
+/* 팀별 색상 구분 */
+
+.team-2 .roadmap-item::before {
+    background: #fdcb6e;
+}
+
+.team-2 .day-number {
+    background: linear-gradient(135deg, #fdcb6e, #e17055);
+}
+
+.team-2 .day-route {
+    background: #fdcb6e;
+}
+
+.team-2 .activity-time {
+    background: #fdcb6e;
+}
+
+.team-2 .activity {
+    border-left-color: #fdcb6e;
+}
+
+.team-3 .roadmap-item::before {
+    background: #00b894;
+}
+
+.team-3 .day-number {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+}
+
+.team-3 .day-route {
+    background: #00b894;
+}
+
+.team-3 .activity-time {
+    background: #00b894;
+}
+
+.team-3 .activity {
+    border-left-color: #00b894;
+}
+
         
 .flight-details {
     border: none;
@@ -322,11 +523,6 @@
     transform: rotate(90deg);
 }
 
-.team-section:nth-child(2) .team-title {
-    background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
-    border-left-color: #fdcb6e;
-}
-
 .team-section:nth-child(2) {
     border-left-color: #fdcb6e;
 }
@@ -342,30 +538,6 @@
 
 .team-section:nth-child(2) .team-ti
 
-.day-card.team-1 { border-left-color: #74b9ff; }
-.day-card.team-2 { border-left-color: #fdcb6e; }
-.day-card.team-3 { border-left-color: #00b894; }
-
-.highlight-text {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-    padding: 8px 12px;
-    border-radius: 8px;
-    margin: 5px 0;
-    border-left: 3px solid #e17055;
-}
-
-.note {
-    color: #e17055;
-    font-size: 0.85em;
-    font-weight: bold;
-}
-
-.hotel-info {
-    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-top: 10px;
-}
 	/* 항공편 정보 섹션 스타일 */
 .flight-info-section {
     background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
@@ -1017,24 +1189,7 @@
                 gap: 8px;
             }
         }
-        
-        /* 접근성 개선 */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-        
-        /* 다크모드 지원 */
-        @media (prefers-color-scheme: dark) {
-            .leaflet-popup-content {
-                background: #333 !important;
-                color: #fff !important;
-            }
-        }
-    </style>
+     </style>
 </head>
 <body>
     <div class="container">
@@ -1045,7 +1200,7 @@
         
         <div class="navigation-tabs">
             <a href="#flight-info" class="nav-tab">✈️ 항공편 정보</a>
-            <a href="#overview" class="nav-tab">📅 일정 개요</a>
+		<a href="#overview" class="nav-tab">🗺️ 여행 로드맵</a>
             <a href="#toya" class="nav-tab">🌊 도야</a>
             <a href="#sapporo" class="nav-tab">🗻 삿포로</a>
             <a href="#map" class="nav-tab">🚌 인기 관광지</a>
@@ -1055,121 +1210,457 @@
 	
 
 
-<div class="itinerary-overview" id="overview">
-    <h2>📅 여행 일정 개요</h2>
+<div class="roadmap-container" id="overview">
+    <h2>📅 여행 로드맵</h2>
     
-    <!-- 1, 2차팀 -->
-<div class="team-section">
-<details class="team-details" role="region" aria-labelledby="team1-title">
-    <summary class="team-title" id="team1-title" tabindex="0">
-        <span class="sr-only">1, 2차팀 일정 펼치기/접기</span>
-        🟦1, 2차팀 10:00시 집결
-    </summary>
-            <div class="day-schedule">
-                <div class="day-card team-1">
-                    <h4>🛫 1일차 (인천 → 도야)</h4>
-                    <div class="location">인천공항 → 신치토세 → 도야호</div>
-                    <p><strong>10:00:</strong> 인천공항제2여객터미널3층출국장B 와C 사이집결</p>
-                    <p><strong>12:35:</strong> 인천 출발 (KE765)</p>
-                    <p><strong>15:20:</strong> 신치토세 도착</p>
-                    <p><strong>16:20:</strong> 입국 수속 후 가이드 미팅</p>
-                    <p><strong>17:40:</strong> 도야호 도착, 호텔 체크인</p>
-                    <p><strong>18:00:</strong> 석식 (호텔 뷔페) 및 온천 휴식</p>
-                </div>
-                
-                <div class="day-card team-1">
-                    <h4>🌄 2일차 (도야 → 삿포로)</h4>
-                    <div class="location">도야호 관광 → 노보리베츠 → 삿포로</div>
-                    <p><strong>오전:</strong> 호텔 조식 후 가이드 미팅 및 체크아웃</p>
-                    <p><strong>관광:</strong> 도야호 유람선, 쇼와신산 & 우스산 로프웨이</p>
-                    <p><strong>중식:</strong> 해산물 철판구이</p>
-                    <p><strong>오후:</strong> 노보리베츠 지옥계곡 관광</p>
-                    <p><strong>18:00:</strong> 삿포로 도착, 모이와야마 전망대</p>
-                    <p><strong>석식:</strong> 삿포로 맥주박물관 견학 및 시음</p>
-                </div>
-                
-                <div class="day-card team-1">
-                    <h4>🏙️ 3일차 (삿포로 → 오타루 → 삿포로)</h4>
-                    <div class="location">오타루 관광 후 삿포로 자유시간</div>
-                    <p><strong>오전:</strong> 호텔 조식 후 오타루 이동</p>
-                    <p><strong>관광:</strong> 오타루 운하, 기타이치 유리공예관, 오르골 전시관</p>
-                    <p><strong>오후:</strong> 삿포로 복귀 후 시내 자유 관광</p>
-                    <p><strong>중식/석식:</strong> 자유식</p>
-                    <p><strong>저녁:</strong> 호텔 투숙 및 휴식</p>
-                </div>
-                
-                <div class="day-card team-1">
-                    <h4>🛫 4일차 (삿포로 → 인천)</h4>
-                    <div class="location">삿포로 → 신치토세 → 인천공항</div>
-                    <p><strong>07:00:</strong> 호텔 조식</p>
-                    <p><strong>09:50:</strong> 체크아웃 후 가이드 미팅</p>
-                    <p><strong>10:40:</strong> 면세점 쇼핑</p>
-                    <p><strong>12:20:</strong> 중식 (돈가스 정식)</p>
-                    <p><strong>14:40:</strong> 신치토세 공항 도착, 출국 수속</p>
-                    <p><strong>16:20:</strong> 신치토세 출발 (KE766) → 19:30 인천 도착</p>
-                </div>
-            </div>
-        </details>
+    <div class="team-selector">
+        <button class="team-btn active" onclick="showTeam(1)">🟦 1,2차팀 (10:00 집결)</button>
+        <button class="team-btn" onclick="showTeam(3)">🟩 3차팀 (07:30 집결)</button>
     </div>
 
-<!-- 3차팀 -->
-    <div class="team-section">
-<details class="team-details" role="region" aria-labelledby="team3-title">
-    <summary class="team-title" id="team3-title" tabindex="0">
-        <span class="sr-only">3차팀 일정 펼치기/접기</span>
-        🟩 3차팀 07:30 집결
-    </summary>
-            <div class="day-schedule">
-               <div class="day-card team-3">
-                    <h4>🛫 1일차 (인천 → 도야)</h4>
-                    <div class="location">인천공항 → 신치토세 → 노보리벳츠 → 도야호</div>
-                    <p><strong>07:30:</strong> 인천공항 제2터미널 3층 출국장 B와 C 사이 집결</p>
-                    <p><strong>10:05:</strong> 인천 국제공항 출발 (KE765편)</p>
-                    <p><strong>12:45:</strong> 신치토세 국제공항 도착</p>
-                    <p><strong>13:30:</strong> 입국 수속 후 전용차량 탑승</p>
-                    <p><strong>14:30:</strong> 노보리벳츠로 이동 (1시간 소요)</p>
-                    <p><strong>15:30:</strong> 노보리벳츠 지옥계곡 관광</p>
-                    <p><strong>17:00:</strong> 도야 호수로 이동 (1시간 소요)</p>
-                    <p><strong>18:00:</strong> 도야 도착 후 호텔 체크인 및 투숙</p>
-                    <p><strong>석식:</strong> 호텔 뷔페 (음료/주류 포함) <span class="note">1시간 30분 제한</span></p>
-                </div>
+    <!-- 1,2차팀 로드맵 -->
+    <div class="team-roadmap team-1 active" id="team-1">
+        <div class="roadmap">
+            <div class="roadmap-timeline">
                 
-                <div class="day-card team-3">
-                    <h4>🌄 2일차 (도야 → 삿포로)</h4>
-                    <div class="location">도야호 관광 → 삿포로</div>
-                    <p><strong>오전:</strong> 호텔 조식 후 체크아웃</p>
-                    <p><strong>09:00:</strong> 도야 관광 - 유람선 탑승, 쇼와신산 & 우스산 로프웨이</p>
-                    <p><strong>12:00:</strong> 중식 (해산물 철판구이)</p>
-                    <p><strong>14:00:</strong> 삿포로 이동 (2시간 소요)</p>
-                    <p><strong>16:00:</strong> 삿포로 도착 후 관광 - 맥주박물관 견학 & 시음, 북해도 신궁</p>
-                    <p><strong>18:00:</strong> 석식 (대게 + 음료/주류) <span class="note">1시간 30분 제한</span></p>
+                <div class="roadmap-item">
+                    <div class="day-header">
+                        <div class="day-number">1</div>
+                        <div class="day-title">🛫 인천 → 도야</div>
+                        <div class="day-route">인천공항 → 신치토세 → 도야호</div>
+                    </div>
+                    <div class="day-activities">
+                        <div class="activity">
+                            <div class="activity-time">10:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">📍 인천공항 집결</div>
+                                <div class="activity-detail">제2여객터미널 3층 출국장 B와 C 사이</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">12:35</div>
+                            <div class="activity-content">
+                                <div class="activity-title">✈️ 인천 출발</div>
+                                <div class="activity-detail">KE765편</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">15:20</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🛬 신치토세 도착</div>
+                                <div class="activity-detail">현지시간 기준</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">16:20</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🚌 가이드 미팅</div>
+                                <div class="activity-detail">입국 수속 후 전용차량 탑승</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">17:40</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🏨 도야호 도착</div>
+                                <div class="activity-detail">호텔 체크인</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">18:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🍽️ 석식 & 온천</div>
+                                <div class="activity-detail">호텔 뷔페 및 온천 휴식</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="day-card team-3">
-                    <h4>🏙️ 3일차 (삿포로 → 오타루 → 삿포로)</h4>
-                    <div class="location">오타루 관광 후 삿포로 자유시간</div>
-                    <p><strong>오전:</strong> 호텔 조식 후 면세점 쇼핑</p>
-                    <p><strong>10:00:</strong> 오타루로 이동 (1시간 소요)</p>
-                    <p><strong>11:00:</strong> 오타루 관광 - 운하, 기타이치 유리공예관, 오르골 전시장</p>
-                    <p><strong>13:00:</strong> 중식 (자유식) + 삿포로 복귀</p>
-                    <p><strong>15:00:</strong> 삿포로 자유 관광 - 쇼핑, 음식, 시내 탐방</p>
-                    <p><strong>석식:</strong> 자유식</p>
+
+                <div class="roadmap-item">
+                    <div class="day-header">
+                        <div class="day-number">2</div>
+                        <div class="day-title">🌄 도야 → 삿포로</div>
+                        <div class="day-route">도야호 관광 → 노보리베츠 → 삿포로</div>
+                    </div>
+                    <div class="day-activities">
+                        <div class="activity">
+                            <div class="activity-time">오전</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🌅 호텔 조식 후 체크아웃</div>
+                                <div class="activity-detail">가이드 미팅</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">관광</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🚢 도야호 관광</div>
+                                <div class="activity-detail">유람선, 쇼와신산 & 우스산 로프웨이</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">중식</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🦀 해산물 철판구이</div>
+                                <div class="activity-detail">현지 특선 요리</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">오후</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🌋 노보리베츠 지옥계곡</div>
+                                <div class="activity-detail">온천 지대 관광</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">오후</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🏙️ 삿포로 도착</div>
+                                <div class="activity-detail">모이와야마 전망대</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">석식</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🍺 삿포로 맥주박물관</div>
+                                <div class="activity-detail">견학 및 시음</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="day-card team-3">
-                    <h4>🛫 4일차 (삿포로 → 인천)</h4>
-                    <div class="location">삿포로 → 신치토세 → 인천공항</div>
-                    <p><strong>07:00:</strong> 호텔 조식</p>
-                    <p><strong>10:00:</strong> 체크아웃 후 신치토세 공항으로 이동</p>
-                    <p><strong>11:30:</strong> 공항 도착 후 출국 수속</p>
-                    <p><strong>14:00:</strong> 신치토세 국제공항 출발 (KE766편)</p>
-                    <p><strong>17:05:</strong> 인천 국제공항 도착</p>
+
+                <div class="roadmap-item">
+                    <div class="day-header">
+                        <div class="day-number">3</div>
+                        <div class="day-title">🏙️ 삿포로 → 오타루 → 삿포로</div>
+                        <div class="day-route">오타루 관광 후 삿포로 자유시간</div>
+                    </div>
+                    <div class="day-activities">
+                        <div class="activity">
+                            <div class="activity-time">오전</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🌅 호텔 조식</div>
+                                <div class="activity-detail">오타루로 이동</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">관광</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🐟 오타루 관광</div>
+                                <div class="activity-detail">운하, 기타이치 유리공예관, 오르골 전시관</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">오후</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🛍️ 삿포로 복귀</div>
+                                <div class="activity-detail">시내 자유 관광</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">식사</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🍽️ 자유식</div>
+                                <div class="activity-detail">중식/석식 자유식</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">저녁</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🏨 호텔 투숙</div>
+                                <div class="activity-detail">휴식</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="roadmap-item">
+                    <div class="day-header">
+                        <div class="day-number">4</div>
+                        <div class="day-title">🛫 삿포로 → 인천</div>
+                        <div class="day-route">삿포로 → 신치토세 → 인천공항</div>
+                    </div>
+                    <div class="day-activities">
+                        <div class="activity">
+                            <div class="activity-time">07:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🌅 호텔 조식</div>
+                                <div class="activity-detail">체크아웃 준비</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">09:50</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🚌 체크아웃</div>
+                                <div class="activity-detail">가이드 미팅</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">10:40</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🛍️ 면세점 쇼핑</div>
+                                <div class="activity-detail">마지막 쇼핑 시간</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">12:20</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🍽️ 중식</div>
+                                <div class="activity-detail">돈가스 정식</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">14:40</div>
+                            <div class="activity-content">
+                                <div class="activity-title">✈️ 공항 도착</div>
+                                <div class="activity-detail">출국 수속</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">16:20</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🛫 신치토세 출발</div>
+                                <div class="activity-detail">KE766편 → 19:30 인천 도착</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </details>
+        </div>
+    </div>
+
+    <!-- 3차팀 로드맵 -->
+    <div class="team-roadmap team-3" id="team-3">
+        <div class="roadmap">
+            <div class="roadmap-timeline">
+                
+                <div class="roadmap-item">
+                    <div class="day-header">
+                        <div class="day-number">1</div>
+                        <div class="day-title">🛫 인천 → 도야</div>
+                        <div class="day-route">인천공항 → 신치토세 → 노보리벳츠 → 도야호</div>
+                    </div>
+                    <div class="day-activities">
+                        <div class="activity">
+                            <div class="activity-time">07:30</div>
+                            <div class="activity-content">
+                                <div class="activity-title">📍 인천공항 집결</div>
+                                <div class="activity-detail">제2터미널 3층 출국장 B와 C 사이</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">10:05</div>
+                            <div class="activity-content">
+                                <div class="activity-title">✈️ 인천 출발</div>
+                                <div class="activity-detail">KE765편</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">12:45</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🛬 신치토세 도착</div>
+                                <div class="activity-detail">현지시간 기준</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">13:30</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🚌 전용차량 탑승</div>
+                                <div class="activity-detail">입국 수속 후 이동</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">14:30</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🚌 노보리벳츠로 이동</div>
+                                <div class="activity-detail">1시간 소요</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">15:30</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🌋 노보리벳츠 지옥계곡</div>
+                                <div class="activity-detail">온천 지대 관광</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">17:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🚌 도야 호수로 이동</div>
+                                <div class="activity-detail">1시간 소요</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">18:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🏨 호텔 체크인</div>
+                                <div class="activity-detail">도야 만세이카쿠 호텔</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">석식</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🍽️ 호텔 뷔페</div>
+                                <div class="activity-detail">음료/주류 포함 (1시간 30분 제한)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="roadmap-item">
+                    <div class="day-header">
+                        <div class="day-number">2</div>
+                        <div class="day-title">🌄 도야 → 삿포로</div>
+                        <div class="day-route">도야호 관광 → 삿포로</div>
+                    </div>
+                    <div class="day-activities">
+                        <div class="activity">
+                            <div class="activity-time">오전</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🌅 호텔 조식</div>
+                                <div class="activity-detail">체크아웃</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">09:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🚢 도야 관광</div>
+                                <div class="activity-detail">유람선 탑승, 쇼와신산 & 우스산 로프웨이</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">12:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🦀 중식</div>
+                                <div class="activity-detail">해산물 철판구이</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">14:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🚌 삿포로 이동</div>
+                                <div class="activity-detail">2시간 소요</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">16:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🏙️ 삿포로 관광</div>
+                                <div class="activity-detail">맥주박물관 견학 & 시음, 북해도 신궁</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">18:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🦀 석식</div>
+                                <div class="activity-detail">대게 + 음료/주류 (1시간 30분 제한)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="roadmap-item">
+                    <div class="day-header">
+                        <div class="day-number">3</div>
+                        <div class="day-title">🏙️ 삿포로 → 오타루 → 삿포로</div>
+                        <div class="day-route">오타루 관광 후 삿포로 자유시간</div>
+                    </div>
+                    <div class="day-activities">
+                        <div class="activity">
+                            <div class="activity-time">오전</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🌅 호텔 조식</div>
+                                <div class="activity-detail">면세점 쇼핑</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">10:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🚌 오타루로 이동</div>
+                                <div class="activity-detail">1시간 소요</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">11:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🐟 오타루 관광</div>
+                                <div class="activity-detail">운하, 기타이치 유리공예관, 오르골 전시장</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">13:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🍽️ 중식 & 복귀</div>
+                                <div class="activity-detail">자유식 + 삿포로 복귀</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">15:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🛍️ 삿포로 자유 관광</div>
+                                <div class="activity-detail">쇼핑, 음식, 시내 탐방</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">석식</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🍽️ 자유식</div>
+                                <div class="activity-detail">개인적으로 즐기는 저녁</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="roadmap-item">
+                    <div class="day-header">
+                        <div class="day-number">4</div>
+                        <div class="day-title">🛫 삿포로 → 인천</div>
+                        <div class="day-route">삿포로 → 신치토세 → 인천공항</div>
+                    </div>
+                    <div class="day-activities">
+                        <div class="activity">
+                            <div class="activity-time">07:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🌅 호텔 조식</div>
+                                <div class="activity-detail">체크아웃 준비</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">10:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🚌 체크아웃</div>
+                                <div class="activity-detail">신치토세 공항으로 이동</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">11:30</div>
+                            <div class="activity-content">
+                                <div class="activity-title">✈️ 공항 도착</div>
+                                <div class="activity-detail">출국 수속</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">14:00</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🛫 신치토세 출발</div>
+                                <div class="activity-detail">KE766편</div>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">17:05</div>
+                            <div class="activity-content">
+                                <div class="activity-title">🛬 인천 도착</div>
+                                <div class="activity-detail">여행 완료</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>        
     </div>
 </div>
-        
+
+
         <div class="content" id="toya">
             <div class="info-section">
                 <h3>🏨 숙소 & 위치 정보</h3>
@@ -2574,6 +3065,24 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
+// 팀 선택 함수
+        function showTeam(teamNumber) {
+            // 모든 팀 버튼에서 active 클래스 제거
+            document.querySelectorAll('.team-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 클릭된 버튼에 active 클래스 추가
+            event.target.classList.add('active');
+            
+            // 모든 팀 로드맵 숨기기
+            document.querySelectorAll('.team-roadmap').forEach(roadmap => {
+                roadmap.classList.remove('active');
+            });
+            
+            // 선택된 팀 로드맵 보이기
+            document.getElementById(`team-${teamNumber}`).classList.add('active');
+        }
         // 지도 초기화
         const map = L.map('map').setView([43.06448278866549, 141.35561227798462], 13);
         
