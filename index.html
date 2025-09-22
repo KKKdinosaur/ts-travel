@@ -142,17 +142,14 @@
 }
 
 .day-number {
-    background: linear-gradient(135deg, #74b9ff, #0984e3);
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.1em;
-    flex-shrink: 0;
+    width: 50px !important;
+    height: 35px !important;
+    font-size: 0.7em !important;
+    margin: 0 auto 8px auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 20px !important;
 }
 
 .day-title {
@@ -1353,6 +1350,13 @@
 
 /* 초소형 화면 추가 최적화 */
 @media (max-width: 414px) {
+
+.day-number {
+    width: 45px !important;
+    height: 32px !important;
+    font-size: 0.65em !important;
+}
+
     .roadmap-container {
         padding: 5px 2px;
     }
@@ -1505,8 +1509,8 @@
     <h2>📅 여행 로드맵</h2>
     
     <div class="team-selector">
-        <button class="team-btn active" onclick="showTeam(1)">🟦 1,2차팀 (10:00 집결)</button>
-        <button class="team-btn" onclick="showTeam(3)">🟩 3차팀 (07:30 집결)</button>
+        <button class="team-btn active" onclick="showTeam(1)">🟦 1,2차팀 (10:00 집결) 클릭 시 접힘</button>
+        <button class="team-btn" onclick="showTeam(3)">🟩 3차팀 (07:30 집결) 클릭 시 접힘</button>
     </div>
 
     <!-- 1,2차팀 로드맵 -->
@@ -1516,7 +1520,6 @@
                 
                 <div class="roadmap-item">
                     <div class="day-header">
-                        <div class="day-number">1</div>
                         <div class="day-title">🛫 인천 → 도야</div>
                         <div class="day-route">인천공항 → 신치토세 → 도야호</div>
                     </div>
@@ -1568,7 +1571,6 @@
 
                 <div class="roadmap-item">
                     <div class="day-header">
-                        <div class="day-number">2</div>
                         <div class="day-title">🌄 도야 → 삿포로</div>
                         <div class="day-route">도야호 관광 → 노보리베츠 → 삿포로</div>
                     </div>
@@ -1620,7 +1622,6 @@
 
                 <div class="roadmap-item">
                     <div class="day-header">
-                        <div class="day-number">3</div>
                         <div class="day-title">🏙️ 삿포로 → 오타루 → 삿포로</div>
                         <div class="day-route">오타루 관광 후 삿포로 자유시간</div>
                     </div>
@@ -1665,7 +1666,6 @@
 
                 <div class="roadmap-item">
                     <div class="day-header">
-                        <div class="day-number">4</div>
                         <div class="day-title">🛫 삿포로 → 인천</div>
                         <div class="day-route">삿포로 → 신치토세 → 인천공항</div>
                     </div>
@@ -1726,7 +1726,6 @@
                 
                 <div class="roadmap-item">
                     <div class="day-header">
-                        <div class="day-number">1</div>
                         <div class="day-title">🛫 인천 → 도야</div>
                         <div class="day-route">인천공항 → 신치토세 → 노보리벳츠 → 도야호</div>
                     </div>
@@ -1799,7 +1798,6 @@
 
                 <div class="roadmap-item">
                     <div class="day-header">
-                        <div class="day-number">2</div>
                         <div class="day-title">🌄 도야 → 삿포로</div>
                         <div class="day-route">도야호 관광 → 삿포로</div>
                     </div>
@@ -1851,7 +1849,6 @@
 
                 <div class="roadmap-item">
                     <div class="day-header">
-                        <div class="day-number">3</div>
                         <div class="day-title">🏙️ 삿포로 → 오타루 → 삿포로</div>
                         <div class="day-route">오타루 관광 후 삿포로 자유시간</div>
                     </div>
@@ -1903,7 +1900,6 @@
 
                 <div class="roadmap-item">
                     <div class="day-header">
-                        <div class="day-number">4</div>
                         <div class="day-title">🛫 삿포로 → 인천</div>
                         <div class="day-route">삿포로 → 신치토세 → 인천공항</div>
                     </div>
@@ -3357,23 +3353,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
 // 팀 선택 함수
-        function showTeam(teamNumber) {
-            // 모든 팀 버튼에서 active 클래스 제거
-            document.querySelectorAll('.team-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // 클릭된 버튼에 active 클래스 추가
-            event.target.classList.add('active');
-            
-            // 모든 팀 로드맵 숨기기
-            document.querySelectorAll('.team-roadmap').forEach(roadmap => {
-                roadmap.classList.remove('active');
-            });
-            
-            // 선택된 팀 로드맵 보이기
-            document.getElementById(`team-${teamNumber}`).classList.add('active');
-        }
+function showTeam(teamNumber) {
+    const clickedButton = event.target;
+    const targetRoadmap = document.getElementById(`team-${teamNumber}`);
+    
+    // 클릭된 버튼이 이미 활성화되어 있는지 확인
+    if (clickedButton.classList.contains('active')) {
+        // 이미 활성화된 버튼을 다시 클릭한 경우 - 토글 해제
+        clickedButton.classList.remove('active');
+        targetRoadmap.classList.remove('active');
+        return;
+    }
+    
+    // 모든 팀 버튼에서 active 클래스 제거
+    document.querySelectorAll('.team-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // 클릭된 버튼에 active 클래스 추가
+    clickedButton.classList.add('active');
+    
+    // 모든 팀 로드맵 숨기기
+    document.querySelectorAll('.team-roadmap').forEach(roadmap => {
+        roadmap.classList.remove('active');
+    });
+    
+    // 선택된 팀 로드맵 보이기
+    targetRoadmap.classList.add('active');
+}
+
         // 지도 초기화
         const map = L.map('map').setView([43.06448278866549, 141.35561227798462], 13);
         
